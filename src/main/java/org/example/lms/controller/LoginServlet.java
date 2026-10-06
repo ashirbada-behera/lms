@@ -5,11 +5,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.lms.service.AuthenticationService;
 
 import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
+    private final AuthenticationService authenticationService =
+            new AuthenticationService();
 
     @Override
     protected void doPost(HttpServletRequest request,
@@ -19,9 +23,14 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Authentication logic will be added here
-        // after the database structure is finalized.
+        boolean authenticated =
+                authenticationService.authenticate(username, password);
 
-        response.getWriter().println("Login request received.");
+        if (authenticated) {
+            response.getWriter().println("Login successful for: " + username);
+            response.getWriter().println("Session created successfully.");
+        } else {
+            response.getWriter().println("Invalid username or password.");
+        }
     }
 }
