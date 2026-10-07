@@ -1,17 +1,22 @@
 package org.example.lms.service;
 
+import org.example.lms.dao.UserDAO;
+import org.example.lms.model.User;
+
 public class AuthenticationService {
 
-    public boolean authenticate(String username, String password) {
+    private final UserDAO userDAO = new UserDAO();
+
+    public User authenticate(String username, String password) {
 
         if (username == null || username.trim().isEmpty()) {
-            return false;
+            return null;
         }
 
         if (password == null || password.trim().isEmpty()) {
-            return false;
+            return null;
         }
 
-        return true;
+        return userDAO.authenticate(username, password);
     }
 }

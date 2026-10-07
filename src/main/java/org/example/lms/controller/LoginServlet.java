@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.lms.model.User;
 import org.example.lms.service.AuthenticationService;
 
 import java.io.IOException;
@@ -23,18 +24,15 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        boolean authenticated =
-                authenticationService.authenticate(username, password);
+        User user = authenticationService.authenticate(username, password);
 
-        if (authenticated) {
+        if (user != null) {
 
-            String role = "MEMBER";
+            request.getSession(true).setAttribute("username", user.getUsername());
+            request.getSession().setAttribute("role", user.getRole());
 
-            request.getSession(true).setAttribute("username", username);
-            request.getSession().setAttribute("role", role);
-
-            response.getWriter().println("Login successful for: " + username);
-            response.getWriter().println("Role: " + role);
+            response.getWriter().println("Login successful for: " + user.getUsername());
+            response.getWriter().println("Role: " + user.getRole());
             response.getWriter().println("Session created successfully.");
 
         } else {
