@@ -27,8 +27,16 @@ public class LoginServlet extends HttpServlet {
                 authenticationService.authenticate(username, password);
 
         if (authenticated) {
+
+            String role = "MEMBER";
+
+            request.getSession(true).setAttribute("username", username);
+            request.getSession().setAttribute("role", role);
+
             response.getWriter().println("Login successful for: " + username);
+            response.getWriter().println("Role: " + role);
             response.getWriter().println("Session created successfully.");
+
         } else {
             response.getWriter().println("Invalid username or password.");
         }
