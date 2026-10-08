@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
@@ -9,59 +12,164 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>lms Maven Webapp</name>
-  <!-- FIXME change it to the project's website -->
+  <name>Library Management System</name>
   <url>http://www.example.com</url>
+
+  <!-- =========================================================
+       Project Properties
+       ========================================================= -->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>24</maven.compiler.source>
-    <maven.compiler.target>24</maven.compiler.target>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Java -->
+    <java.version>21</java.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+
+    <!-- Jakarta Web -->
+    <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+    <jakarta.jsp.version>3.1.0</jakarta.jsp.version>
+
+    <!-- JSTL -->
+    <jakarta.jstl.api.version>3.0.2</jakarta.jstl.api.version>
+    <jakarta.jstl.impl.version>3.0.1</jakarta.jstl.impl.version>
+
+    <!-- Persistence -->
+    <hibernate.version>7.4.7.Final</hibernate.version>
+    <mysql.version>26.7.0</mysql.version>
+
+    <!-- Validation -->
+    <hibernate.validator.version>9.1.4.Final</hibernate.validator.version>
+
+    <!-- Testing -->
+    <junit.version>6.1.2</junit.version>
   </properties>
 
+  <!-- =========================================================
+       Dependencies
+       ========================================================= -->
+
   <dependencies>
+
+    <!-- Jakarta Servlet API -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta.servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Jakarta JSP API -->
+    <dependency>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+      <version>${jakarta.jsp.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSTL API -->
+    <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>${jakarta.jstl.api.version}</version>
+    </dependency>
+
+    <!-- JSTL Implementation -->
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>${jakarta.jstl.impl.version}</version>
+    </dependency>
+
+    <!-- Hibernate ORM -->
+    <dependency>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+
+    <!-- MySQL JDBC Driver -->
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>${mysql.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Hibernate Validator -->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate.validator.version}</version>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
+  <!-- =========================================================
+       Build Configuration
+       ========================================================= -->
+
   <build>
+
     <finalName>lms</finalName>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+
+    <pluginManagement>
       <plugins>
+
+        <!-- Maven Clean Plugin -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.5.0</version>
         </plugin>
-        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
+
+        <!-- Maven Resources Plugin -->
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.3.1</version>
         </plugin>
+
+        <!-- Maven Compiler Plugin -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>3.16.0</version>
         </plugin>
+
+        <!-- Maven Surefire Plugin -->
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.5.6</version>
         </plugin>
+
+        <!-- Maven WAR Plugin -->
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.5.1</version>
         </plugin>
+
+        <!-- Maven Install Plugin -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.1.4</version>
         </plugin>
+
+        <!-- Maven Deploy Plugin -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.1.4</version>
         </plugin>
+
       </plugins>
     </pluginManagement>
+
   </build>
+
 </project>
