@@ -7,6 +7,18 @@
 
 <h2>Library Management System</h2>
 
+<% String error = request.getParameter("error"); %>
+
+<% if ("empty".equals(error)) { %>
+<p style="color: red;">
+    Please enter both username and password.
+</p>
+<% } else if ("invalid".equals(error)) { %>
+<p style="color: red;">
+    Invalid username or password.
+</p>
+<% } %>
+
 <form action="login" method="post">
 
     <label>Username:</label>

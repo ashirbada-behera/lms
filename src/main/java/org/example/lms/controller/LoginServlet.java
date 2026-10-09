@@ -24,6 +24,14 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
+        if (username == null || username.isBlank()
+                || password == null || password.isBlank()) {
+
+            response.sendRedirect(
+                    request.getContextPath() + "/login.jsp?error=empty");
+            return;
+        }
+
         User user = authenticationService.authenticate(username, password);
 
         if (user != null) {
@@ -36,7 +44,8 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().println("Session created successfully.");
 
         } else {
-            response.getWriter().println("Invalid username or password.");
+            response.sendRedirect(
+                request.getContextPath() + "/login.jsp?error=invalid");
         }
     }
 }
