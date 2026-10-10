@@ -1,6 +1,5 @@
 package org.example.lms.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class IssueRecord {
@@ -12,7 +11,7 @@ public class IssueRecord {
     private LocalDate dueDate;
     private LocalDate returnDate;
     private String status;
-    private BigDecimal fine;
+    private double fine;
 
     // No-argument constructor
     public IssueRecord() {
@@ -22,7 +21,7 @@ public class IssueRecord {
     public IssueRecord(int issueId, int memberId, int bookId,
                        LocalDate issueDate, LocalDate dueDate,
                        LocalDate returnDate, String status,
-                       BigDecimal fine) {
+                       double fine) {
         this.issueId = issueId;
         this.memberId = memberId;
         this.bookId = bookId;
@@ -89,11 +88,11 @@ public class IssueRecord {
         this.status = status;
     }
 
-    public BigDecimal getFine() {
+    public double getFine() {
         return fine;
     }
 
-    public void setFine(BigDecimal fine) {
+    public void setFine(double fine) {
         this.fine = fine;
     }
 }
