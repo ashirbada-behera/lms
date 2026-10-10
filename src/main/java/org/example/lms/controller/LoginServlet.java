@@ -39,9 +39,15 @@ public class LoginServlet extends HttpServlet {
             request.getSession(true).setAttribute("username", user.getUsername());
             request.getSession().setAttribute("role", user.getRole());
 
-            response.getWriter().println("Login successful for: " + user.getUsername());
-            response.getWriter().println("Role: " + user.getRole());
-            response.getWriter().println("Session created successfully.");
+            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(
+                        request.getContextPath() + "/admin/admin-home.jsp"
+                );
+            } else {
+                response.sendRedirect(
+                        request.getContextPath() + "/protected/home.jsp"
+                );
+            }
 
         } else {
             response.sendRedirect(
