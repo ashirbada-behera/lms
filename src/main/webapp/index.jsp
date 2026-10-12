@@ -1,312 +1,35 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Library Management System - Member Management Portal">
-    <title>Library Management System</title>
-
-    <style>
-        :root {
-            color-scheme: light;
-            --primary: #173b67;
-            --primary-dark: #102b4c;
-            --accent: #d9a441;
-            --text: #172337;
-            --muted: #66758a;
-            --surface: #ffffff;
-            --background: #f4f7fb;
-            --border: #e1e8f0;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Segoe UI", Arial, sans-serif;
-            color: var(--text);
-            background: var(--background);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .navbar {
-            min-height: 76px;
-            padding: 16px 6%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--primary);
-            font-size: 18px;
-            font-weight: 750;
-            text-decoration: none;
-        }
-
-        .brand-mark {
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            background: var(--primary);
-            color: white;
-            font-size: 22px;
-        }
-
-        .nav-link {
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 650;
-            text-decoration: none;
-        }
-
-        .nav-link:hover,
-        .nav-link:focus-visible {
-            text-decoration: underline;
-        }
-
-        main {
-            width: min(1120px, 88%);
-            margin: auto;
-            padding: 64px 0;
-            flex: 1;
-        }
-
-        .hero {
-            position: relative;
-            overflow: hidden;
-            padding: clamp(32px, 6vw, 72px);
-            border-radius: 24px;
-            color: white;
-            background: linear-gradient(
-                125deg,
-                var(--primary-dark),
-                var(--primary)
-            );
-            box-shadow: 0 20px 45px rgba(16, 43, 76, 0.14);
-        }
-
-        .eyebrow {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 999px;
-            color: #f5d995;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.4px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            max-width: 700px;
-            margin: 0;
-            font-size: clamp(34px, 5vw, 58px);
-            line-height: 1.12;
-            letter-spacing: -1.5px;
-        }
-
-        .hero p {
-            max-width: 600px;
-            margin: 22px 0 30px;
-            color: #dce7f5;
-            font-size: 17px;
-            line-height: 1.8;
-        }
-
-        .button {
-            display: inline-flex;
-            min-height: 48px;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-            border: 1px solid transparent;
-            border-radius: 10px;
-            background: var(--accent);
-            color: #172337;
-            font-size: 14px;
-            font-weight: 750;
-            text-decoration: none;
-            transition: transform 160ms ease, filter 160ms ease;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.04);
-        }
-
-        .button:focus-visible {
-            outline: 3px solid white;
-            outline-offset: 3px;
-        }
-
-        .section-heading {
-            margin: 42px 0 18px;
-            font-size: 22px;
-            letter-spacing: -0.4px;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-        }
-
-        .feature {
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            background: var(--surface);
-        }
-
-        .feature-icon {
-            width: 44px;
-            height: 44px;
-            display: grid;
-            place-items: center;
-            margin-bottom: 18px;
-            border-radius: 12px;
-            background: #eaf0f8;
-            color: var(--primary);
-            font-size: 21px;
-        }
-
-        .feature h3 {
-            margin: 0 0 10px;
-            font-size: 17px;
-        }
-
-        .feature p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        footer {
-            padding: 22px 6%;
-            border-top: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--muted);
-            text-align: center;
-            font-size: 13px;
-        }
-
-        @media (max-width: 760px) {
-            .navbar {
-                padding-inline: 5%;
-            }
-
-            .brand {
-                font-size: 15px;
-            }
-
-            main {
-                width: 90%;
-                padding: 36px 0;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero p {
-                font-size: 15px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                transition: none !important;
-            }
-        }
-    </style>
-</head>
-
-<body>
-<header class="navbar">
-    <a class="brand" href="${pageContext.request.contextPath}/">
-        <span class="brand-mark" aria-hidden="true">&#128218;</span>
-        <span>Library Management System</span>
-    </a>
-
-    <a class="nav-link"
-       href="${pageContext.request.contextPath}/members">
-        Member Management &rarr;
-    </a>
-</header>
-
-<main>
-    <section class="hero" aria-labelledby="hero-title">
-        <span class="eyebrow">Library Administration Portal</span>
-
-        <h1 id="hero-title">
-            A smarter way to manage your library.
-        </h1>
-
-        <p>
-            Manage member records, find registered members, and maintain
-            membership information through one organized interface.
-        </p>
-
-        <a class="button"
-           href="${pageContext.request.contextPath}/members">
-            Open Member Management &rarr;
-        </a>
-    </section>
-
-    <h2 class="section-heading">Member Management</h2>
-
-    <section class="feature-grid" aria-label="Available features">
-        <article class="feature">
-            <div class="feature-icon" aria-hidden="true">&#128101;</div>
-            <h3>Member Directory</h3>
-            <p>
-                View registered members and review their membership
-                information in one place.
-            </p>
-        </article>
-
-        <article class="feature">
-            <div class="feature-icon" aria-hidden="true">&#128269;</div>
-            <h3>Member Search</h3>
-            <p>
-                Find members using available identifying details such
-                as name, email, phone, or member code.
-            </p>
-        </article>
-
-        <article class="feature">
-            <div class="feature-icon" aria-hidden="true">&#128221;</div>
-            <h3>Membership Records</h3>
-            <p>
-                Access member details and maintain membership status
-                through the Member Management module.
-            </p>
-        </article>
-    </section>
-</main>
-
-<footer>
-    Library Management System &middot; Member Management Portal
-</footer>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f1eb"><meta name="description" content="A thoughtful library workspace for clear member records and organized administration.">
+<title>LMS — A library, thoughtfully organized</title>
+<style>
+:root{--paper:#f4f1eb;--ink:#191916;--muted:#77766f;--line:#d8d3c9;--green:#244b35;--terracotta:#c65e42;--white:#fbfaf7}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button,input{font:inherit}.container{width:min(1240px,calc(100% - 64px));margin:auto}
+.nav-wrap{position:sticky;top:0;z-index:10;padding:22px 0;background:rgba(244,241,235,.82);backdrop-filter:blur(16px)}.nav{width:min(820px,calc(100% - 36px));min-height:58px;margin:auto;padding:7px 9px 7px 17px;border:1px solid #cfcac0;border-radius:999px;display:flex;align-items:center;gap:22px;background:rgba(251,250,247,.65)}.brand{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:18px;white-space:nowrap}.book-mark{display:block;width:20px;height:29px;border-radius:2px 4px 4px 2px;background:linear-gradient(90deg,#173624 0 18%,#2f6344 19% 100%);box-shadow:2px 2px 0 #d1c9b9}.brand small{font:11px Inter,"Segoe UI",sans-serif;color:var(--muted);margin-left:4px}.nav-links{display:flex;align-items:center;gap:28px;margin-left:auto;font-size:12px;color:#45453f}.nav-links a:hover{color:var(--green)}.nav-cta{display:inline-flex;align-items:center;gap:14px;min-height:42px;padding:0 18px;border-radius:999px;background:#171815;color:#fffdf8;font-size:12px;white-space:nowrap}.nav-cta:hover{background:var(--green)}
+.hero{position:relative;min-height:700px;display:grid;place-items:center;overflow:hidden;padding:70px 0 80px}.hero-copy{position:relative;z-index:2;width:min(650px,100%);text-align:center;margin:auto}.eyebrow{display:inline-flex;align-items:center;gap:10px;color:#6d7066;font-size:12px;margin-bottom:24px}.dot{width:9px;height:9px;border-radius:50%;background:var(--green)}h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(47px,6.4vw,86px);line-height:.99;letter-spacing:-3.8px;font-weight:400}h1 em{font-weight:400;color:var(--green)}.intro{max-width:450px;margin:25px auto 27px;color:#66665f;font-size:14px;line-height:1.8}
+.search{display:flex;align-items:center;gap:10px;width:min(440px,100%);margin:0 auto;padding:7px 8px 7px 17px;border:1px solid #d0cbc1;border-radius:999px;background:rgba(251,250,247,.8)}.search svg{width:19px;height:19px;color:#6d6c64;flex-shrink:0}.search input{min-width:0;width:100%;border:0;outline:0;background:transparent;font-size:12px;color:var(--ink)}.search input::placeholder{color:#9b988f}.search button{width:42px;height:42px;flex:0 0 42px;border:0;border-radius:50%;background:#171815;color:white;display:grid;place-items:center;cursor:pointer}.search button:hover{background:var(--green)}.search button svg{color:white}.hero-note{margin-top:16px;color:#8b887f;font-size:10px}
+.float-book{position:absolute;z-index:1;display:flex;align-items:stretch;justify-content:center;width:clamp(108px,14vw,180px);aspect-ratio:.68;box-shadow:10px 20px 30px #2b271d22,2px 3px 2px #2b271d19;transition:transform .4s ease}.float-book:before{content:"";width:12px;flex:0 0 12px;background:linear-gradient(90deg,#9c9485,#e5ddcf 38%,#a69d8e);border-right:1px solid #9f9687}.cover{flex:1;padding:13px 10px;display:flex;flex-direction:column;justify-content:space-between;font-family:Georgia,"Times New Roman",serif;font-size:clamp(11px,1.25vw,17px);line-height:1.05;letter-spacing:-.2px}.cover small{font:7px/1.5 Inter,"Segoe UI",sans-serif;letter-spacing:.5px}.cover-green{background:#214b34;color:#f2ead8}.cover-cream{background:#eee5d6;color:#24241f}.cover-white{background:#f8f6f0;color:#191916}.cover-orange{background:#c96043;color:#271c17}.cover-sand{background:#d6b88c;color:#27231c}.cover-white .abstract{height:45%;background:linear-gradient(150deg,transparent 0 20%,#1c1c19 21% 54%,transparent 55%),linear-gradient(35deg,transparent 0 45%,#1c1c19 46% 67%,transparent 68%);margin:8px -10px}.cover-sand .abstract{height:40%;background:repeating-radial-gradient(ellipse at 50% 50%,#645d50 0 2px,#c8b18d 3px 7px);margin:8px -10px}
+.book-one{left:4%;top:36%;transform:rotate(-2deg)}.book-two{right:9%;top:8%;width:clamp(135px,17vw,210px);transform:rotate(2deg)}.book-three{right:1.5%;top:48%;width:clamp(125px,15vw,190px);transform:rotate(1deg)}.book-four{left:16%;bottom:2%;width:clamp(120px,15vw,185px);transform:rotate(1deg)}.book-five{right:25%;bottom:5%;width:clamp(120px,14vw,175px);transform:rotate(-1deg)}.book-six{left:27%;top:7%;width:clamp(80px,8vw,105px);aspect-ratio:.25;transform:rotate(1deg)}.float-book:hover{translate:0 -6px;rotate:0deg}
+.feature-strip{border-top:1px solid var(--line);padding:34px 0 55px}.feature-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:23px}.kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;color:var(--green);font-weight:700;margin-bottom:9px}h2{font:400 clamp(26px,3vw,38px)/1.1 Georgia,serif;letter-spacing:-1px;margin:0}.feature-head p{max-width:360px;margin:0;color:var(--muted);font-size:12px;line-height:1.8}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.feature{padding:22px 23px;border:1px solid var(--line);border-radius:12px;background:rgba(251,250,247,.55)}.feature-no{color:var(--green);font:italic 16px Georgia,serif}.feature h3{font:400 21px Georgia,serif;margin:18px 0 8px}.feature p{color:var(--muted);font-size:12px;line-height:1.8;margin:0 0 16px}.feature a{font-size:11px;font-weight:700;color:var(--green)}
+.closing{padding:0 0 50px}.closing-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;background:#20231e;color:#f8f5ed;border-radius:14px;padding:32px 36px}.closing h2{font-size:30px}.closing p{color:#c7c5bb;font-size:12px;margin:10px 0 0}.closing .nav-cta{background:#f8f5ed;color:#20231e}footer{border-top:1px solid var(--line);padding:21px 0 28px;color:#88857b;font-size:10px}.footer-inner{display:flex;justify-content:space-between;gap:16px}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #63856a;outline-offset:3px}
+@media(max-width:900px){.hero{min-height:650px}.book-one{left:1%;top:28%}.book-two{right:3%;top:7%}.book-three{right:0;top:53%}.book-four{left:6%;bottom:0}.book-five{right:10%;bottom:1%}.book-six{left:15%;top:7%}.hero-copy{width:min(590px,80%)}}
+@media(max-width:620px){.container{width:calc(100% - 34px)}.nav-wrap{padding:12px 0}.nav{width:calc(100% - 24px);gap:8px;padding-left:12px}.brand{font-size:15px}.brand small{display:none}.nav-links{gap:0}.nav-links a:not(.nav-cta){display:none}.nav-cta{min-height:38px;padding:0 13px;font-size:11px}.hero{min-height:650px;padding:65px 0 70px}.hero-copy{width:100%;padding:0 8px}h1{font-size:clamp(43px,12vw,65px);letter-spacing:-2.3px}.intro{font-size:13px}.float-book{opacity:.88;width:92px}.book-one{left:-18px;top:15%;width:86px}.book-two{right:-12px;top:8%;width:100px}.book-three{right:-18px;top:60%;width:92px}.book-four{left:0;bottom:1%;width:90px}.book-five{right:3%;bottom:0;width:90px}.book-six{left:5%;top:56%;width:46px}.cover{padding:9px 6px;font-size:10px}.float-book:before{width:8px;flex-basis:8px}.cover small{font-size:6px}.feature-head{align-items:flex-start;flex-direction:column}.features{grid-template-columns:1fr}.closing-inner{align-items:flex-start;flex-direction:column;padding:27px 23px}.closing h2{font-size:27px}.footer-inner{flex-direction:column}.hero-note{font-size:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style></head><body>
+<% String base = request.getContextPath(); %>
+<header class="nav-wrap"><nav class="nav" aria-label="Main navigation"><a class="brand" href="<%= base %>/" aria-label="LMS home"><span class="book-mark" aria-hidden="true"></span><span>LMS <small>Library</small></span></a><div class="nav-links"><a href="#discover">Discover</a><a href="#collections">Collections</a><a href="#about">About</a><a class="nav-cta" href="<%= base %>/members">Explore library <span aria-hidden="true">→</span></a></div></nav></header>
+<main><section class="hero" id="discover" aria-labelledby="hero-title">
+<div class="float-book book-one" aria-hidden="true"><div class="cover cover-green">SUNDAYS<small>A JOURNEY THROUGH NATURE, RITUALS AND A SLOWER LIFE</small></div></div>
+<div class="float-book book-two" aria-hidden="true"><div class="cover cover-cream">Between<br>Form and<br>Function<small>DESIGN · CULTURE · EVERYDAY LIFE</small></div></div>
+<div class="float-book book-three" aria-hidden="true"><div class="cover cover-white"><div class="abstract"></div>ATLAS<br>OF THOUGHT<small>IDEAS · MAPS · CONNECTIONS</small></div></div>
+<div class="float-book book-four" aria-hidden="true"><div class="cover cover-sand">Fluid<br>Reflections<div class="abstract"></div><small>WATER, DESIGN AND THE POETICS OF EVERYDAY LIFE</small></div></div>
+<div class="float-book book-five" aria-hidden="true"><div class="cover cover-orange">Spatial Systems<br>Manual<small>DESIGN<br>STRUCTURES<br>PEOPLE</small></div></div>
+<div class="float-book book-six" aria-hidden="true"><div class="cover cover-cream">The Art of Looking</div></div>
+<div class="container"><div class="hero-copy"><div class="eyebrow"><span class="dot"></span>Your campus library, reimagined</div><h1 id="hero-title">A world of knowledge,<br><em>beautifully organized.</em></h1><p class="intro">A thoughtful space for discovering knowledge and keeping library membership organized. Less clutter, more clarity, and a calmer way to manage the details.</p>
+<form class="search" action="<%= base %>/members" method="get" role="search" aria-label="Search member directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="search" maxlength="150" placeholder="Search member records..." aria-label="Search member records"><button type="submit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button></form><div class="hero-note">A considered workspace for the people who make a library.</div></div></div></section>
+<section class="feature-strip" id="collections"><div class="container"><div class="feature-head"><div><div class="kicker">The member workspace</div><h2>Good systems make room for good reading.</h2></div><p>Simple, purposeful tools for the everyday work behind a well-organized library.</p></div><div class="features">
+<article class="feature"><span class="feature-no">01 / Directory</span><h3>People, in focus.</h3><p>Browse member records in a clear, structured directory built for everyday administration.</p><a href="<%= base %>/members">Open member directory →</a></article>
+<article class="feature"><span class="feature-no">02 / Search</span><h3>Find the right record.</h3><p>Use the member directory's existing search and status filters to narrow your results.</p><a href="<%= base %>/members">Find a member →</a></article>
+<article class="feature"><span class="feature-no">03 / Records</span><h3>Details, thoughtfully kept.</h3><p>Create and maintain member contact details and membership information through the existing workflows.</p><a href="<%= base %>/members/create">Add a member →</a></article>
+</div></div></section><section class="closing" id="about"><div class="container"><div class="closing-inner"><div><h2>Bring a little more clarity to your library.</h2><p>Open the member workspace to manage the records available in LMS.</p></div><a class="nav-cta" href="<%= base %>/members">Enter member workspace <span aria-hidden="true">→</span></a></div></div></section></main>
+<footer><div class="container footer-inner"><span>LMS · Library Management System</span><span>Designed for a calmer, clearer member workflow.</span><a href="<%= base %>/members">Member management →</a></div></footer></body></html>

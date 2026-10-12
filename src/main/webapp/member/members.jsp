@@ -1,4 +1,4 @@
-```jsp
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
@@ -6,578 +6,400 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Directory | Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage library members, contact details, and membership status.">
+    <meta name="theme-color" content="#f5f1e9">
 
-    <style>
-        :root {
-            --primary: #173b67;
-            --primary-dark: #102b4c;
-            --accent: #d9a441;
-            --text: #172337;
-            --muted: #66758a;
-            --surface: #ffffff;
-            --background: #f4f7fb;
-            --border: #e1e8f0;
-            --success-bg: #e5f7ed;
-            --success-text: #176b3a;
-            --danger-bg: #fff0ee;
-            --danger-text: #a93226;
-        }
+    <title>Member Management | LMS</title>
 
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            color: var(--text);
-            background: var(--background);
-        }
-
-        a {
-            color: inherit;
-        }
-
-        .topbar {
-            min-height: 72px;
-            padding: 16px 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .brand {
-            color: var(--primary);
-            font-weight: 750;
-            text-decoration: none;
-        }
-
-        .top-link {
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 650;
-            text-decoration: none;
-        }
-
-        .container {
-            width: min(1200px, 92%);
-            margin: 36px auto;
-        }
-
-        .page-heading {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 26px;
-        }
-
-        .eyebrow {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 750;
-            letter-spacing: 1.4px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            margin: 8px 0;
-            font-size: clamp(28px, 4vw, 36px);
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        .button {
-            display: inline-flex;
-            min-height: 42px;
-            align-items: center;
-            justify-content: center;
-            padding: 0 16px;
-            border: 1px solid transparent;
-            border-radius: 9px;
-            background: var(--primary);
-            color: white;
-            font-size: 14px;
-            font-weight: 650;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background: var(--primary-dark);
-        }
-
-        .button-secondary {
-            border-color: var(--border);
-            background: white;
-            color: var(--primary);
-        }
-
-        .button-secondary:hover {
-            background: #eef3f9;
-        }
-
-        .notice {
-            margin-bottom: 20px;
-            padding: 13px 16px;
-            border-radius: 10px;
-            background: var(--success-bg);
-            color: var(--success-text);
-            font-size: 14px;
-        }
-
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            background: var(--surface);
-        }
-
-        .search-form {
-            display: flex;
-            flex: 1 1 300px;
-            gap: 10px;
-        }
-
-        input,
-        select {
-            min-width: 0;
-            min-height: 42px;
-            padding: 10px 12px;
-            border: 1px solid #ccd6e2;
-            border-radius: 8px;
-            background: white;
-            color: var(--text);
-            font: inherit;
-        }
-
-        .search-form input {
-            flex: 1;
-        }
-
-        input:focus,
-        select:focus,
-        .button:focus-visible,
-        .action-button:focus-visible {
-            outline: 3px solid rgba(23, 59, 103, 0.2);
-            outline-offset: 2px;
-        }
-
-        .count {
-            color: var(--muted);
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .table-card {
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            background: var(--surface);
-        }
-
-        .table-scroll {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        th {
-            padding: 15px 18px;
-            background: #f8fafc;
-            color: var(--muted);
-            font-size: 11px;
-            font-weight: 750;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 16px 18px;
-            border-top: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        tbody tr:hover {
-            background: #fafcff;
-        }
-
-        .member-name {
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .member-code {
-            display: block;
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 750;
-        }
-
-        .status-active {
-            background: var(--success-bg);
-            color: var(--success-text);
-        }
-
-        .status-inactive {
-            background: #edf0f4;
-            color: #536174;
-        }
-
-        .status-suspended {
-            background: var(--danger-bg);
-            color: var(--danger-text);
-        }
-
-        .actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .action-link {
-            color: var(--primary);
-            font-weight: 650;
-            text-decoration: none;
-        }
-
-        .action-link:hover {
-            text-decoration: underline;
-        }
-
-        .action-button {
-            padding: 0;
-            border: 0;
-            background: transparent;
-            color: var(--danger-text);
-            font: inherit;
-            font-weight: 650;
-            cursor: pointer;
-        }
-
-        .action-button:hover {
-            text-decoration: underline;
-        }
-
-        .empty-state {
-            padding: 52px 20px;
-            text-align: center;
-        }
-
-        .empty-state h2 {
-            margin: 0 0 10px;
-            font-size: 20px;
-        }
-
-        .empty-state p {
-            margin: 0 0 20px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        footer {
-            padding: 24px;
-            color: var(--muted);
-            text-align: center;
-            font-size: 12px;
-        }
-
-        @media (max-width: 600px) {
-            .topbar {
-                align-items: flex-start;
-            }
-
-            .container {
-                margin-top: 26px;
-            }
-
-            .search-form {
-                flex-basis: 100%;
-            }
-
-            .search-form .button {
-                padding-inline: 12px;
-            }
-
-            .toolbar > form:not(.search-form) {
-                flex: 1;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/member-management.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/lms-editorial-theme.css">
 </head>
 
 <body>
-<header class="topbar">
-    <a class="brand" href="${pageContext.request.contextPath}/">
-        Library Management System
-    </a>
+<div class="app-shell">
 
-    <a class="top-link" href="${pageContext.request.contextPath}/">
-        Home &rarr;
-    </a>
-</header>
-
-<main class="container">
-    <section class="page-heading">
-        <div>
-            <div class="eyebrow">Member Management</div>
-            <h1>Member Directory</h1>
-            <p class="subtitle">
-                View, search, and manage registered library members.
-            </p>
-        </div>
-
-        <a class="button"
-           href="${pageContext.request.contextPath}/members/create">
-            + Register Member
+    <aside class="sidebar">
+        <a class="brand"
+           href="${pageContext.request.contextPath}/members"
+           aria-label="Library Management System">
+            <span class="brand-mark" aria-hidden="true">L</span>
+            <span>
+                <strong>LIBRARY</strong>
+                <small>MANAGEMENT SYSTEM</small>
+            </span>
         </a>
-    </section>
 
-    <c:if test="${param.deactivated eq 'true'}">
-        <div class="notice" role="status">
-            Member status updated successfully.
+        <div class="sidebar-caption">WORKSPACE</div>
+
+        <nav class="sidebar-nav" aria-label="Workspace navigation">
+            <a class="nav-link active"
+               href="${pageContext.request.contextPath}/members"
+               aria-current="page">
+                <span class="nav-icon" aria-hidden="true">▦</span>
+                <span>Member Management</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-avatar" aria-hidden="true">LM</div>
+            <div>
+                <strong>Library Management</strong>
+                <small>Member workspace</small>
+            </div>
         </div>
-    </c:if>
+    </aside>
 
-    <c:if test="${param.created eq 'true'}">
-        <div class="notice" role="status">
-            Member registered successfully.
-        </div>
-    </c:if>
+    <main class="main-content">
 
-    <c:if test="${param.updated eq 'true'}">
-        <div class="notice" role="status">
-            Member details updated successfully.
-        </div>
-    </c:if>
+        <header class="topbar">
+            <div>
+                <div class="eyebrow">WORKSPACE / MEMBERS</div>
+                <h1>Member Management</h1>
+                <p class="page-subtitle">
+                    Manage member records and membership information.
+                </p>
+            </div>
 
-    <c:if test="${not empty errorMessage}">
-        <div class="notice" role="alert">
-            <c:out value="${errorMessage}"/>
-        </div>
-    </c:if>
+            <a class="btn btn-primary"
+               href="${pageContext.request.contextPath}/members/create">
+                <span aria-hidden="true">＋</span>
+                Add member
+            </a>
+        </header>
 
-    <section class="toolbar" aria-label="Member search and filters">
-        <form class="search-form"
-              method="get"
-              action="${pageContext.request.contextPath}/members/search">
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-error" role="alert">
+                <c:out value="${errorMessage}"/>
+            </div>
+        </c:if>
 
-            <input type="search"
-                   name="q"
-                   placeholder="Search name, email, phone or member code"
-                   value="<c:out value='${searchQuery}'/>"
-                   aria-label="Search members">
+        <section class="stats-grid" aria-label="Member summary">
 
-            <button class="button" type="submit">Search</button>
-        </form>
+            <article class="stat-card stat-card-members">
+                <div class="stat-card-icon stat-card-icon-blue" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="8" r="3.5"/>
+                        <path d="M2 20v-1.5a7 7 0 0 1 14 0V20"/>
+                        <path d="M16 5a3.5 3.5 0 0 1 0 7"/>
+                        <path d="M18 14a5.5 5.5 0 0 1 4 5.3V20"/>
+                    </svg>
+                </div>
 
-        <form method="get"
-              action="${pageContext.request.contextPath}/members"
-              aria-label="Filter members by status">
+                <div class="stat-card-copy">
+                    <div class="stat-label">MATCHING MEMBERS</div>
+                    <div class="stat-value">
+                        <c:out value="${memberCount}" default="0"/>
+                    </div>
+                    <div class="stat-note">Records in the current result</div>
+                </div>
 
-            <select name="status" aria-label="Member status">
-                <option value=""
-                    ${empty param.status ? 'selected' : ''}>
-                    All statuses
-                </option>
+                <div class="stat-card-decoration stat-decoration-people"
+                     aria-hidden="true">
+                    <svg viewBox="0 0 100 70" fill="currentColor">
+                        <circle cx="36" cy="17" r="12"/>
+                        <circle cx="64" cy="14" r="11"/>
+                        <path d="M12 60c0-17 9-27 24-27s24 10 24 27z"/>
+                        <path d="M49 59c1-15 8-25 19-25 13 0 20 10 20 25z"/>
+                    </svg>
+                </div>
+            </article>
 
-                <option value="ACTIVE"
-                    ${param.status eq 'ACTIVE' ? 'selected' : ''}>
-                    Active
-                </option>
+            <article class="stat-card stat-card-accent">
+                <div class="stat-card-icon stat-card-icon-purple" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 5h16l-6.5 7.5v5L10 20v-7.5z"/>
+                    </svg>
+                </div>
 
-                <option value="INACTIVE"
-                    ${param.status eq 'INACTIVE' ? 'selected' : ''}>
-                    Inactive
-                </option>
+                <div class="stat-card-copy">
+                    <div class="stat-label">CURRENT VIEW</div>
+                    <div class="stat-value stat-value-text">
+                        <c:choose>
+                            <c:when test="${selectedStatus eq 'ACTIVE'}">
+                                Active members
+                            </c:when>
+                            <c:when test="${selectedStatus eq 'INACTIVE'}">
+                                Inactive members
+                            </c:when>
+                            <c:when test="${selectedStatus eq 'SUSPENDED'}">
+                                Suspended members
+                            </c:when>
+                            <c:otherwise>All statuses</c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div class="stat-note">Use filters to narrow the list</div>
+                </div>
 
-                <option value="SUSPENDED"
-                    ${param.status eq 'SUSPENDED' ? 'selected' : ''}>
-                    Suspended
-                </option>
-            </select>
+                <div class="stat-card-decoration stat-decoration-filter"
+                     aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </article>
 
-            <button class="button button-secondary" type="submit">
-                Filter
-            </button>
-        </form>
+        </section>
 
-        <span class="count">
-            <c:out value="${memberCount}"/> result(s)
-        </span>
-    </section>
+        <section class="panel" aria-labelledby="directory-title">
 
-    <section class="table-card" aria-label="Registered members">
-        <c:choose>
-            <c:when test="${not empty members}">
-                <div class="table-scroll">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Member</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Membership</th>
-                            <th>Valid Until</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
+            <div class="panel-heading">
+                <div class="directory-heading">
+                    <div class="directory-heading-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="8" r="3.5"/>
+                            <path d="M2 20v-1.5a7 7 0 0 1 14 0V20"/>
+                            <path d="M16 5a3.5 3.5 0 0 1 0 7"/>
+                            <path d="M18 14a5.5 5.5 0 0 1 4 5.3V20"/>
+                        </svg>
+                    </div>
 
-                        <tbody>
-                        <c:forEach var="member" items="${members}">
-                            <tr>
-                                <td>
-                                    <span class="member-name">
-                                        <c:out value="${member.fullName}"/>
-                                    </span>
+                    <div>
+                        <h2 id="directory-title">Member directory</h2>
+                        <p>Search, filter and open individual member records.</p>
+                    </div>
+                </div>
+            </div>
 
-                                    <span class="member-code">
-                                        <c:out value="${member.memberCode}"/>
-                                    </span>
-                                </td>
+            <form class="filter-form"
+                  method="get"
+                  action="${pageContext.request.contextPath}/members">
 
-                                <td>
-                                    <c:out value="${member.email}"/>
-                                </td>
+                <div class="field filter-search">
+                    <label for="search">Search members</label>
+                    <div class="search-input-wrap">
+                        <span class="search-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round">
+                                <circle cx="10.8" cy="10.8" r="6.5"/>
+                                <path d="m16 16 4.5 4.5"/>
+                            </svg>
+                        </span>
 
-                                <td>
-                                    <c:out value="${member.phone}"/>
-                                </td>
+                        <input id="search"
+                               name="q"
+                               type="search"
+                               maxlength="150"
+                               placeholder="Name, code, email or phone"
+                               value="<c:out value='${searchQuery}'/>"
+                               autocomplete="off">
+                    </div>
+                </div>
 
-                                <td>
-                                    <c:out value="${member.membershipType}"/>
-                                </td>
+                <div class="field filter-status">
+                    <label for="status">Membership status</label>
+                    <select id="status" name="status">
+                        <option value=""
+                            <c:if test="${empty selectedStatus}">selected</c:if>>
+                            All statuses
+                        </option>
+                        <option value="ACTIVE"
+                            <c:if test="${selectedStatus eq 'ACTIVE'}">selected</c:if>>
+                            Active
+                        </option>
+                        <option value="INACTIVE"
+                            <c:if test="${selectedStatus eq 'INACTIVE'}">selected</c:if>>
+                            Inactive
+                        </option>
+                        <option value="SUSPENDED"
+                            <c:if test="${selectedStatus eq 'SUSPENDED'}">selected</c:if>>
+                            Suspended
+                        </option>
+                    </select>
+                </div>
 
-                                <td>
-                                    <c:out value="${member.validUntil}"/>
-                                </td>
+                <div class="filter-actions">
+                    <button class="btn btn-primary" type="submit">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M4 5h16l-6.5 7.5v5L10 20v-7.5z"/>
+                        </svg>
+                        Apply filters
+                    </button>
 
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${member.status eq 'ACTIVE'}">
-                                            <span class="status status-active">
-                                                Active
-                                            </span>
-                                        </c:when>
+                    <a class="btn btn-secondary"
+                       href="${pageContext.request.contextPath}/members">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M20 7v5h-5"/>
+                            <path d="M20 12a8 8 0 1 0 2 5"/>
+                        </svg>
+                        Reset
+                    </a>
+                </div>
+            </form>
 
-                                        <c:when test="${member.status eq 'INACTIVE'}">
-                                            <span class="status status-inactive">
-                                                Inactive
-                                            </span>
-                                        </c:when>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption class="visually-hidden">
+                        Library members and their membership information
+                    </caption>
 
-                                        <c:otherwise>
-                                            <span class="status status-suspended">
-                                                Suspended
-                                            </span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
+                    <thead>
+                    <tr>
+                        <th scope="col">MEMBER</th>
+                        <th scope="col">MEMBER CODE</th>
+                        <th scope="col">CONTACT</th>
+                        <th scope="col">MEMBERSHIP</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col" class="align-right">ACTIONS</th>
+                    </tr>
+                    </thead>
 
-                                <td>
-                                    <div class="actions">
-                                        <a class="action-link"
-                                           href="${pageContext.request.contextPath}/members/details?id=${member.id}">
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${not empty members}">
+                            <c:forEach var="member" items="${members}">
+                                <tr>
+                                    <td>
+                                        <div class="member-cell">
+                                            <div class="member-avatar" aria-hidden="true">
+                                                <c:choose>
+                                                    <c:when test="${not empty member.fullName}">
+                                                        <c:out value="${member.fullName.substring(0, 1)}"/>
+                                                    </c:when>
+                                                    <c:otherwise>M</c:otherwise>
+                                                </c:choose>
+                                            </div>
+
+                                            <div class="member-primary">
+                                                <strong>
+                                                    <c:out value="${member.fullName}"
+                                                           default="Unnamed member"/>
+                                                </strong>
+                                                <span>
+                                                    <c:out value="${member.email}"
+                                                           default="No email available"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="code-pill">
+                                            <c:out value="${member.memberCode}" default="—"/>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty member.phone}">
+                                                <c:out value="${member.phone}"/>
+                                            </c:when>
+                                            <c:otherwise>—</c:otherwise>
+                                        </c:choose>
+                                    </td>
+
+                                    <td>
+                                        <c:out value="${member.membershipType}" default="—"/>
+                                    </td>
+
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${member.status eq 'ACTIVE'}">
+                                                <span class="status-badge status-active">
+                                                    <span class="status-symbol" aria-hidden="true">✓</span>
+                                                    <span>ACTIVE</span>
+                                                </span>
+                                            </c:when>
+                                            <c:when test="${member.status eq 'INACTIVE'}">
+                                                <span class="status-badge status-inactive">
+                                                    <span class="status-symbol" aria-hidden="true">×</span>
+                                                    <span>INACTIVE</span>
+                                                </span>
+                                            </c:when>
+                                            <c:when test="${member.status eq 'SUSPENDED'}">
+                                                <span class="status-badge status-suspended">
+                                                    <span class="status-symbol" aria-hidden="true">!</span>
+                                                    <span>SUSPENDED</span>
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="status-badge status-inactive">
+                                                    <span class="status-symbol" aria-hidden="true">?</span>
+                                                    <span>UNKNOWN</span>
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+
+                                    <td class="align-right action-cell">
+                                        <a class="text-link action-view"
+                                           href="${pageContext.request.contextPath}/members/details?id=${member.id}"
+                                           aria-label="View member details">
+                                            <svg viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="1.9"
+                                                 stroke-linecap="round" stroke-linejoin="round"
+                                                 aria-hidden="true">
+                                                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>
+                                                <circle cx="12" cy="12" r="2.5"/>
+                                            </svg>
                                             View
                                         </a>
 
-                                        <a class="action-link"
-                                           href="${pageContext.request.contextPath}/members/edit?id=${member.id}">
+                                        <a class="text-link action-edit"
+                                           href="${pageContext.request.contextPath}/members/edit?id=${member.id}"
+                                           aria-label="Edit member">
+                                            <svg viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="1.9"
+                                                 stroke-linecap="round" stroke-linejoin="round"
+                                                 aria-hidden="true">
+                                                <path d="m14 5 5 5"/>
+                                                <path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20z"/>
+                                            </svg>
                                             Edit
                                         </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
 
-                                        <c:if test="${member.status eq 'ACTIVE'}">
-                                            <form method="post"
-                                                  action="${pageContext.request.contextPath}/members/deactivate"
-                                                  onsubmit="return confirm('Deactivate this member?');">
-
-                                                <%-- CSRF protection --%>
-                                                <input type="hidden"
-                                                       name="csrfToken"
-                                                       value="<c:out value='${csrfToken}'/>">
-
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="<c:out value='${member.id}'/>">
-
-                                                <button class="action-button"
-                                                        type="submit">
-                                                    Deactivate
-                                                </button>
-                                            </form>
-                                        </c:if>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <div class="empty-icon" aria-hidden="true">⌕</div>
+                                        <strong>No members found</strong>
+                                        <p>Try changing your search or status filter.</p>
+                                        <a class="text-link"
+                                           href="${pageContext.request.contextPath}/members">
+                                            Clear filters
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </c:when>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
 
-            <c:otherwise>
-                <div class="empty-state">
-                    <h2>No members found</h2>
+            <div class="table-footer">
+                Showing <strong><c:out value="${memberCount}" default="0"/></strong>
+                matching record(s)
+            </div>
+        </section>
 
-                    <p>
-                        No records match the current search or filter.
-                        Register a member or adjust your search.
-                    </p>
+        <footer class="page-footer">
+            Library Management System
+            <span aria-hidden="true">•</span>
+            Member workspace
+        </footer>
 
-                    <a class="button"
-                       href="${pageContext.request.contextPath}/members/create">
-                        Register First Member
-                    </a>
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </section>
-</main>
-
-<footer>
-    Library Management System &middot; Member Management
-</footer>
+    </main>
+</div>
 </body>
 </html>
-```
