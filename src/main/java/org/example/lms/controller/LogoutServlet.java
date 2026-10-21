@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -16,8 +17,12 @@ public class LogoutServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getSession().invalidate();
+        HttpSession session = request.getSession(false);
 
-        response.getWriter().println("Logout successful.");
+        if (session != null) {
+            session.invalidate();
+        }
+
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 }
