@@ -40,6 +40,12 @@
             <a class="nav-link" href="#issue-return">
                 ⇄ &nbsp; Issue &amp; Return
             </a>
+
+            <a href="#" class="nav-link logout-link">
+                <span class="nav-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
         </nav>
 
         <div class="sidebar-bottom">
