@@ -44,6 +44,17 @@
         <h2>Return a book</h2>
         <p>Enter the issue ID to process the return.</p>
 
+        <% if (request.getAttribute("message") != null) { %>
+        <div class="return-message">
+            <p><%= request.getAttribute("message") %></p>
+
+            <% if (Boolean.TRUE.equals(request.getAttribute("success"))) { %>
+            <h3>
+                Fine: ₹<%= String.format("%.2f", request.getAttribute("fine")) %>
+            </h3>
+            <% } %>
+        </div>
+        <% } %>
         <div class="form-panel">
 <form action = "return" method = "POST">
     <label class="form-label" for="issueId">Issue Id:</label>

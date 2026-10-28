@@ -84,4 +84,23 @@ public class IssueDAO {
             return false;
         }
     }
+    public double getFine(int issueId) {
+        String sql = "SELECT fine FROM issue_records WHERE issue_id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, issueId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("fine");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
 }

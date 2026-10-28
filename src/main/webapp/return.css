@@ -189,3 +189,18 @@ input[type="number"]:focus {
         padding: 20px;
     }
 }
+.return-message {
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #e8f2e9;
+    color: #1c422f;
+}
+
+.return-message p {
+    margin-top: 0;
+}
+
+.return-message h3 {
+    margin-bottom: 0;
+}
