@@ -1,0 +1,191 @@
+
+/* Basic page colors and fonts */
+body {
+    margin: 0;
+    padding: 30px;
+    background-color: #F5F1E9;
+    color: #292821;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Main page layout */
+body {
+    display: flex;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Left sidebar */
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 30px 20px;
+    margin: -30px 0 -30px -30px;
+    background-color: #243D30;
+    color: #FFFDF9;
+    flex-shrink: 0;
+}
+
+/* Library brand */
+.brand h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    color: #FFFDF9;
+}
+
+.brand p {
+    margin-top: 6px;
+    color: #D8D0C3;
+    font-size: 13px;
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+    margin-top: 45px;
+}
+
+.nav-heading {
+    margin-bottom: 15px;
+    color: #C5BBAA;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+}
+
+.sidebar-nav a {
+    display: block;
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 7px;
+    color: #F5F1E9;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #4F6548;
+    color: white;
+}
+
+/* Main content area */
+.main-content {
+    flex: 1;
+    min-width: 0;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+/* Page heading */
+.page-header {
+    margin-bottom: 25px;
+}
+
+.eyebrow {
+    color: #81725E;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+h1, h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: normal;
+}
+
+h1 {
+    margin-bottom: 8px;
+    font-size: 36px;
+}
+
+.page-subtitle {
+    color: #79776E;
+}
+
+/* Return book panel */
+.return-panel {
+    padding: 25px;
+    border-radius: 5px;
+    border: 1px solid #E5DED2;
+    background-color: #F5F1E9;
+}
+
+/* Return book form panel */
+.form-panel {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 28px;
+    border: 1px solid #E5DED2;
+    border-radius: 14px;
+    background-color: #FFFDF9;
+    box-sizing: border-box;
+}
+
+/* Form label */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Issue ID input */
+input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+    padding: 12px;
+    border: 1px solid #D8D0C3;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+input[type="number"]:focus {
+    border-color: #64876A;
+    outline: none;
+}
+
+/* Return button */
+.return-button {
+    background-color: #4F6548;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.return-button:hover {
+    background-color: #1C422F;
+}
+
+/* Small screen layout */
+@media (max-width: 700px) {
+    body {
+        display: block;
+        padding: 15px;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        margin: -15px -15px 25px;
+        padding: 20px;
+    }
+
+    .sidebar-nav {
+        margin-top: 25px;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .form-panel {
+        padding: 20px;
+    }
+}
