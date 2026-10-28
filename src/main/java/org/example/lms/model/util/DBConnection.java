@@ -7,7 +7,7 @@ import static java.lang.Class.forName;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/lms";
+    private static final String URL = "jdbc:mysql://localhost:3306/library_db";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Jbr@12345";
 
@@ -16,7 +16,7 @@ public class DBConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC driver not found",e);
+            throw new SQLException("MySQL JDBC drivera not found",e);
         }
     }
 }
