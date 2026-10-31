@@ -8,8 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -32,9 +32,8 @@ public class IssueDAO {
         }
     }
 
-
-    // Add a new issue record
-    public boolean addIssue(IssueRecord issue) {
+    // Add a new issue record and return its generated Issue ID
+    public int addIssue(IssueRecord issue) {
 
         String checkSql = "SELECT issue_id FROM issue_records " +
                 "WHERE book_id = ? AND status = 'ISSUED'";
@@ -45,24 +44,23 @@ public class IssueDAO {
 
         try (Connection con = DBConnection.getConnection()) {
 
-            // Prevent issuing an already issued book
+            // Prevent duplicate active issues
             try (PreparedStatement checkStmt = con.prepareStatement(checkSql)) {
-
                 checkStmt.setInt(1, issue.getBookId());
 
                 try (ResultSet rs = checkStmt.executeQuery()) {
                     if (rs.next()) {
-                        return false;
+                        return 0;
                     }
                 }
             }
 
-            // Insert issue record
-            try (PreparedStatement psmt = con.prepareStatement(insertSql)) {
+            // Insert issue and retrieve generated ID
+            try (PreparedStatement psmt = con.prepareStatement(
+                    insertSql, Statement.RETURN_GENERATED_KEYS)) {
 
                 psmt.setInt(1, issue.getMemberId());
                 psmt.setInt(2, issue.getBookId());
-
                 psmt.setDate(3, java.sql.Date.valueOf(issue.getIssueDate()));
                 psmt.setDate(4, java.sql.Date.valueOf(issue.getDueDate()));
 
@@ -75,15 +73,23 @@ public class IssueDAO {
                 psmt.setString(6, issue.getStatus());
                 psmt.setDouble(7, issue.getFine());
 
-                return psmt.executeUpdate() > 0;
+                int rowsInserted = psmt.executeUpdate();
+
+                if (rowsInserted > 0) {
+                    try (ResultSet keys = psmt.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            return keys.getInt(1);
+                        }
+                    }
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
-    }
 
+        return 0;
+    }
 
     // Return a book and calculate its fine
     public boolean returnBook(int issueId) {
@@ -101,13 +107,10 @@ public class IssueDAO {
 
             LocalDate dueDate;
 
-            // Get due date
             try (PreparedStatement psmt = con.prepareStatement(selectSql)) {
-
                 psmt.setInt(1, issueId);
 
                 try (ResultSet rs = psmt.executeQuery()) {
-
                     if (!rs.next()) {
                         return false;
                     }
@@ -116,13 +119,10 @@ public class IssueDAO {
                 }
             }
 
-            // Calculate fine: ₹5 per late day
             long daysLate = ChronoUnit.DAYS.between(dueDate, returnDate);
             double fine = Math.max(0, daysLate) * 5.0;
 
-            // Update return details
             try (PreparedStatement psmt = con.prepareStatement(updateSql)) {
-
                 psmt.setDate(1, java.sql.Date.valueOf(returnDate));
                 psmt.setDouble(2, fine);
                 psmt.setInt(3, issueId);
@@ -136,8 +136,7 @@ public class IssueDAO {
         }
     }
 
-
-    // Get the fine for a particular issue
+    // Get fine for a particular issue
     public double getFine(int issueId) {
 
         String sql = "SELECT fine FROM issue_records WHERE issue_id = ?";
@@ -148,7 +147,6 @@ public class IssueDAO {
             psmt.setInt(1, issueId);
 
             try (ResultSet rs = psmt.executeQuery()) {
-
                 if (rs.next()) {
                     return rs.getDouble("fine");
                 }

@@ -191,3 +191,111 @@ input[type="date"]:focus {
         padding: 20px;
     }
 }
+
+/* Issue success and error messages */
+.issue-message {
+    margin: 24px 0;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid;
+}
+
+.issue-message h3 {
+    margin: 0 0 14px;
+    font-size: 18px;
+}
+
+.issue-message.success {
+    background-color: #eaf8ef;
+    border-color: #8bd4a3;
+    color: #176b35;
+}
+
+.issue-message.error {
+    background-color: #fff0f0;
+    border-color: #e8a0a0;
+    color: #a32626;
+}
+
+.issue-details {
+    margin-top: 15px;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 8px;
+}
+
+.issue-details h4 {
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+
+.issue-details p {
+    margin: 9px 0;
+    font-size: 14px;
+}
+
+.issue-note {
+    margin-top: 15px !important;
+    padding-top: 12px;
+    border-top: 1px solid #c8dfce;
+    font-weight: 600;
+}
+
+/* Keep all issue form input boxes consistent */
+.form-panel input {
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #d9cdbd;
+    border-radius: 9px;
+    background-color: #fff;
+    font-size: 15px;
+}
+
+/* Success and error message panel */
+.issue-message {
+    margin: 22px 0;
+    padding: 18px 20px;
+    border-radius: 10px;
+    border: 1px solid;
+}
+
+/* Successful issue - green */
+.issue-message.success {
+    background-color: #edf7ed;
+    border-color: #a5cba5;
+    color: #285b32;
+}
+
+/* Already issued / validation error - red */
+.issue-message.error {
+    background-color: #fff0ef;
+    border-color: #e5aaa5;
+    color: #a52e27;
+}
+
+.issue-message h3 {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.issue-details {
+    margin-top: 12px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.issue-details p {
+    margin: 9px 0;
+    font-size: 14px;
+}
+
+.issue-note {
+    padding-top: 12px;
+    border-top: 1px solid #d8e4d8;
+    font-weight: 600;
+}

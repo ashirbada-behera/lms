@@ -20,10 +20,16 @@ import java.time.format.DateTimeParseException;
 public class IssueServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.getRequestDispatcher("/issue.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
 
         String registrationNumber = req.getParameter("registrationNumber");
@@ -32,7 +38,7 @@ public class IssueServlet extends HttpServlet {
 
         // Validate registration number
         if (registrationNumber == null || registrationNumber.trim().isEmpty()) {
-            resp.getWriter().write("Please enter a registration number.");
+            showMessage(req, resp, "Please enter a registration number.", "error");
             return;
         }
 
@@ -41,33 +47,42 @@ public class IssueServlet extends HttpServlet {
         int memberId = memberDAO.getMemberId(registrationNumber.trim());
 
         if (memberId == -1) {
-            resp.getWriter().write("Member not found. Check the registration number.");
+            showMessage(req, resp,
+                    "Member not found. Check the registration number.", "error");
             return;
         }
 
         try {
-            // Validate book ID
+            // Validate Book ID
             int bookId = Integer.parseInt(bookIdText);
 
             if (bookId <= 0) {
-                resp.getWriter().write("Book ID must be a positive number.");
-                return;
-            }
-
-            // Check whether book is already issued
-            IssueDAO issueDAO = new IssueDAO();
-
-            if (issueDAO.isBookAlreadyIssued(bookId)) {
-                resp.getWriter().write("This book is already issued.");
+                showMessage(req, resp,
+                        "Book ID must be a positive number.", "error");
                 return;
             }
 
             // Validate due date
-            LocalDate dueDate = LocalDate.parse(dueDateText);
+            if (dueDateText == null || dueDateText.trim().isEmpty()) {
+                showMessage(req, resp, "Please select a due date.", "error");
+                return;
+            }
+
             LocalDate issueDate = LocalDate.now();
+            LocalDate dueDate = LocalDate.parse(dueDateText);
 
             if (dueDate.isBefore(issueDate)) {
-                resp.getWriter().write("Due date cannot be before the issue date.");
+                showMessage(req, resp,
+                        "Due date cannot be before the issue date.", "error");
+                return;
+            }
+
+            IssueDAO issueDAO = new IssueDAO();
+
+            // Check for an existing active issue
+            if (issueDAO.isBookAlreadyIssued(bookId)) {
+                showMessage(req, resp,
+                        "This book is already issued.", "error");
                 return;
             }
 
@@ -83,25 +98,50 @@ public class IssueServlet extends HttpServlet {
                     0.0
             );
 
-            boolean success = issueDAO.addIssue(issue);
+            // Save and retrieve generated Issue ID
+            int generatedIssueId = issueDAO.addIssue(issue);
 
-            if (success) {
-                resp.getWriter().write("success");
+            if (generatedIssueId > 0) {
+
+                req.setAttribute("issueId", generatedIssueId);
+                req.setAttribute("memberId", memberId);
+                req.setAttribute("bookId", bookId);
+                req.setAttribute("issueDate", issueDate);
+                req.setAttribute("dueDate", dueDate);
+
+                showMessage(req, resp,
+                        "Book issued successfully!", "success");
+
             } else {
-                resp.getWriter().write("failure");
+                showMessage(req, resp,
+                        "Issue failed. The book may already be issued. Please try again.",
+                        "error");
             }
 
         } catch (NumberFormatException e) {
-            resp.getWriter().write("Please enter a valid numeric Book ID.");
+            showMessage(req, resp,
+                    "Please enter a valid numeric Book ID.", "error");
 
         } catch (DateTimeParseException e) {
-            resp.getWriter().write("Please enter a valid due date.");
+            showMessage(req, resp,
+                    "Please enter a valid due date.", "error");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            resp.getWriter().write(
-                    "Unable to verify book availability. Please try again."
-            );
+            showMessage(req, resp,
+                    "Unable to check book availability. Please try again.", "error");
         }
+    }
+
+    private void showMessage(HttpServletRequest req,
+                             HttpServletResponse resp,
+                             String message,
+                             String messageType)
+            throws ServletException, IOException {
+
+        req.setAttribute("message", message);
+        req.setAttribute("messageType", messageType);
+
+        req.getRequestDispatcher("/issue.jsp").forward(req, resp);
     }
 }
