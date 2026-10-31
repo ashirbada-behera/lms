@@ -1,50 +1,20 @@
 package org.example.lms.book.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-
 import java.util.Objects;
 
-@Entity
-@Table(
-        name = "books",
-        indexes = {
-                @Index(name = "idx_books_title", columnList = "title"),
-                @Index(name = "idx_books_author", columnList = "author"),
-                @Index(name = "idx_books_category", columnList = "category")
-        }
-)
 public class Book {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "isbn", nullable = false, unique = true, length = 20)
     private String isbn;
-
-    @Column(name = "title", nullable = false, length = 200)
     private String title;
-
-    @Column(name = "author", nullable = false, length = 150)
     private String author;
-
-    @Column(name = "category", nullable = false, length = 100)
     private String category;
-
-    @Column(name = "total_copies", nullable = false)
     private int totalCopies;
-
-    @Column(name = "available_copies", nullable = false)
     private int availableCopies;
+    private String coverImagePath;
 
-    // Required by Hibernate
-    protected Book() {
+    // No-argument constructor for JDBC mapping
+    public Book() {
     }
 
     // Constructor for creating a new book
@@ -80,6 +50,15 @@ public class Book {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        if (id != null && id <= 0) {
+            throw new IllegalArgumentException(
+                    "Book ID must be positive."
+            );
+        }
+        this.id = id;
     }
 
     public String getIsbn() {
@@ -146,5 +125,18 @@ public class Book {
         }
 
         this.availableCopies = availableCopies;
+    }
+
+    // Book cover image path
+    public String getCoverImagePath() {
+        return coverImagePath;
+    }
+
+    public void setCoverImagePath(String coverImagePath) {
+        if (coverImagePath != null && coverImagePath.trim().isEmpty()) {
+            this.coverImagePath = null;
+        } else {
+            this.coverImagePath = coverImagePath;
+        }
     }
 }
