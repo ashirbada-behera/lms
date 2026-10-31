@@ -34,6 +34,7 @@ public class BookServiceImpl implements BookService {
             );
         }
 
+        book.setIsbn(isbn);
         return bookRepository.save(book);
     }
 
@@ -92,10 +93,15 @@ public class BookServiceImpl implements BookService {
         existingBook.setTitle(updatedBook.getTitle());
         existingBook.setAuthor(updatedBook.getAuthor());
         existingBook.setCategory(updatedBook.getCategory());
-
-        // Preserve the real available-copy count.
-        // The entity validates the new total against this count.
         existingBook.setTotalCopies(updatedBook.getTotalCopies());
+
+        // Update the cover only when a new cover path is supplied.
+        // Otherwise, preserve the existing cover.
+        String newCoverPath = updatedBook.getCoverImagePath();
+
+        if (newCoverPath != null && !newCoverPath.isBlank()) {
+            existingBook.setCoverImagePath(newCoverPath);
+        }
 
         return bookRepository.update(existingBook);
     }
@@ -103,12 +109,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(Long id) {
         requireId(id);
-
-        // Verify that the book exists before requesting deletion.
         getBookById(id);
 
-        // Repository-level protection against issue-record references
-        // must be implemented before production use.
         return bookRepository.deleteById(id);
     }
 
