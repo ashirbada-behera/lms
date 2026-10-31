@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IssueDAO {
 
@@ -91,12 +93,62 @@ public class IssueDAO {
         return 0;
     }
 
+    // Find all currently issued books belonging to a member
+    public List<IssueRecord> getIssuedBooksByRegistrationNumber(
+            String registrationNumber) {
+
+        List<IssueRecord> issuedBooks = new ArrayList<>();
+
+        String sql = "SELECT ir.issue_id, ir.member_id, ir.book_id, " +
+                "ir.issue_date, ir.due_date, ir.return_date, ir.status, ir.fine " +
+                "FROM issue_records ir " +
+                "JOIN members m ON ir.member_id = m.member_id " +
+                "WHERE m.registration_number = ? AND ir.status = 'ISSUED' " +
+                "ORDER BY ir.issue_date DESC";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement psmt = con.prepareStatement(sql)) {
+
+            psmt.setString(1, registrationNumber);
+
+            try (ResultSet rs = psmt.executeQuery()) {
+
+                while (rs.next()) {
+
+                    IssueRecord issue = new IssueRecord();
+
+                    issue.setIssueId(rs.getInt("issue_id"));
+                    issue.setMemberId(rs.getInt("member_id"));
+                    issue.setBookId(rs.getInt("book_id"));
+                    issue.setIssueDate(rs.getDate("issue_date").toLocalDate());
+                    issue.setDueDate(rs.getDate("due_date").toLocalDate());
+
+                    java.sql.Date returnDate = rs.getDate("return_date");
+
+                    if (returnDate != null) {
+                        issue.setReturnDate(returnDate.toLocalDate());
+                    }
+
+                    issue.setStatus(rs.getString("status"));
+                    issue.setFine(rs.getDouble("fine"));
+
+                    issuedBooks.add(issue);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return issuedBooks;
+    }
+
     // Return a book and calculate its fine
     public boolean returnBook(int issueId) {
 
         LocalDate returnDate = LocalDate.now();
 
-        String selectSql = "SELECT due_date FROM issue_records " +
+        String selectSql = "SELECT issue_date FROM issue_records " +
                 "WHERE issue_id = ? AND status = 'ISSUED'";
 
         String updateSql = "UPDATE issue_records " +
@@ -105,7 +157,7 @@ public class IssueDAO {
 
         try (Connection con = DBConnection.getConnection()) {
 
-            LocalDate dueDate;
+            LocalDate issueDate;
 
             try (PreparedStatement psmt = con.prepareStatement(selectSql)) {
                 psmt.setInt(1, issueId);
@@ -115,14 +167,19 @@ public class IssueDAO {
                         return false;
                     }
 
-                    dueDate = rs.getDate("due_date").toLocalDate();
+                    issueDate = rs.getDate("issue_date").toLocalDate();
                 }
             }
 
-            long daysLate = ChronoUnit.DAYS.between(dueDate, returnDate);
-            double fine = Math.max(0, daysLate) * 5.0;
+            // Calculate the number of calendar days since issue
+            long daysSinceIssue = ChronoUnit.DAYS.between(issueDate, returnDate);
+
+            // First 3 days are free; ₹5 fine for each additional day
+            long chargeableDays = Math.max(0, daysSinceIssue - 3);
+            double fine = chargeableDays * 5.0;
 
             try (PreparedStatement psmt = con.prepareStatement(updateSql)) {
+
                 psmt.setDate(1, java.sql.Date.valueOf(returnDate));
                 psmt.setDouble(2, fine);
                 psmt.setInt(3, issueId);
