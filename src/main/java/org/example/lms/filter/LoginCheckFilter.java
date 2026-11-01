@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter({"/protected/*", "/admin/*"})
+@WebFilter({"/index.jsp", "/protected/*", "/admin/*"})
 public class LoginCheckFilter implements Filter {
 
     @Override

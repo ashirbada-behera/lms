@@ -411,3 +411,43 @@ a {
 .logout-btn:hover {
     background-color: #bb2d3b;
 }
+/* User Management topbar layout */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Admin profile box */
+.topbar .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    background: white;
+    border: 1px solid #e8e8df;
+    border-radius: 10px;
+}
+
+/* Back to Dashboard - separate from admin profile */
+.topbar .back-link {
+    display: inline-block;
+    padding: 11px 17px;
+    background: #244b3b;
+    color: white;
+    border-radius: 7px;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.topbar .back-link:hover {
+    background: #315b49;
+}
+
+@media (max-width: 700px) {
+    .topbar {
+        flex-wrap: wrap;
+    }
+}

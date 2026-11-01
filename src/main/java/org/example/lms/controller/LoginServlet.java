@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import org.example.lms.model.User;
 import org.example.lms.service.AuthenticationService;
 
@@ -36,22 +38,21 @@ public class LoginServlet extends HttpServlet {
 
         if (user != null) {
 
-            request.getSession(true).setAttribute("username", user.getUsername());
-            request.getSession().setAttribute("role", user.getRole());
+            HttpSession session = request.getSession(true);
 
-            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                response.sendRedirect(
-                        request.getContextPath() + "/admin/admin-home.jsp"
-                );
-            } else {
-                response.sendRedirect(
-                        request.getContextPath() + "/protected/home.jsp"
-                );
-            }
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("role", user.getRole());
+            session.setAttribute("currentUser", user);
+
+            // Both ADMIN and MEMBER use the common dashboard.
+            response.sendRedirect(
+                    request.getContextPath() + "/index.jsp"
+            );
 
         } else {
+
             response.sendRedirect(
-                request.getContextPath() + "/login.jsp?error=invalid");
+                    request.getContextPath() + "/login.jsp?error=invalid");
         }
     }
 }
