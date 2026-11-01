@@ -51,7 +51,7 @@
             </a>
 
             <a class="nav-link"
-               href="${pageContext.request.contextPath}/member/members.jsp">
+               href="${pageContext.request.contextPath}/members">
                 ♙ &nbsp; Member Management
             </a>
 
@@ -196,7 +196,7 @@
                 </a>
 
                 <a class="quick-access-card"
-                   href="${pageContext.request.contextPath}/member/members.jsp">
+                   href="${pageContext.request.contextPath}/members">
                     <span class="quick-access-icon">♙</span>
                     <strong>Member Management</strong>
                     <span>View and manage members</span>

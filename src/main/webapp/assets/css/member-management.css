@@ -1,0 +1,223 @@
+/* =====================================================
+   LIBRARY MANAGEMENT SYSTEM
+   MEMBER MANAGEMENT
+   Shared theme: Green, Cream and Terracotta
+   ===================================================== */
+
+/* Member table */
+
+.member-table {
+    min-width: 1100px;
+}
+
+.member-table th:nth-child(1),
+.member-table td:nth-child(1) { width: 12%; }
+
+.member-table th:nth-child(2),
+.member-table td:nth-child(2) { width: 19%; }
+
+.member-table th:nth-child(3),
+.member-table td:nth-child(3) { width: 20%; }
+
+.member-table th:nth-child(4),
+.member-table td:nth-child(4) { width: 12%; }
+
+.member-table th:nth-child(5),
+.member-table td:nth-child(5) { width: 12%; }
+
+.member-table th:nth-child(6),
+.member-table td:nth-child(6) { width: 12%; }
+
+.member-table th:nth-child(7),
+.member-table td:nth-child(7) { width: 13%; }
+
+/* Member identity */
+
+.member-info-cell {
+    min-width: 170px;
+}
+
+.member-info-cell strong {
+    display: block;
+    color: var(--ref-text);
+    font-size: 13px;
+}
+
+.member-info-text {
+    display: block;
+    margin-top: 4px;
+    color: var(--ref-muted);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.member-code {
+    color: var(--ref-green);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* Membership labels */
+
+.membership-label {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--ref-light-green);
+    color: var(--ref-green);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* Member status */
+
+.status-active {
+    color: #286a49;
+    background: #e4f0e5;
+    border-color: #c6dfca;
+}
+
+.status-inactive {
+    color: #925b13;
+    background: #fff0d2;
+    border-color: #f0d49c;
+}
+
+.status-suspended {
+    color: #a83232;
+    background: #fde8e6;
+    border-color: #f2c3bd;
+}
+
+/* Search and status filter */
+
+.member-filter {
+    flex-wrap: wrap;
+}
+
+.member-filter select {
+    min-width: 145px;
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 1px solid var(--ref-border);
+    border-radius: 7px;
+    background: var(--ref-surface);
+    color: var(--ref-text);
+    font: inherit;
+}
+
+/* Success alert */
+
+.alert-success {
+    color: #286a49;
+    border-color: #c6dfca;
+    background: #eaf4eb;
+}
+
+/* Member actions */
+
+.member-table .table-actions {
+    min-width: 150px;
+}
+
+.member-table .action-deactivate {
+    color: #a83232;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 760px) {
+    .member-filter select {
+        width: 100%;
+    }
+
+    .member-table {
+        min-width: 1050px;
+    }
+}
+/* Activate member action */
+.member-table .action-activate {
+    color: var(--ref-green);
+    font-weight: 700;
+}
+
+.member-table .action-activate:hover {
+    color: #193b2d;
+    text-decoration: underline;
+}
+
+/* =====================================================
+   ADD MEMBER - FORM SECTION DESIGN
+   ===================================================== */
+
+.member-form-section {
+    padding: 26px 0;
+    border-bottom: 1px solid var(--ref-border);
+}
+
+.member-form-section:first-of-type {
+    padding-top: 12px;
+}
+
+.member-form-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 10px;
+}
+
+.form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--ref-light-green);
+    color: var(--ref-green);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-section-heading h3 {
+    margin: 0 0 5px;
+    color: var(--ref-navy);
+    font-family: Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.form-section-heading p {
+    margin: 0;
+    color: var(--ref-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.member-form-section .form-grid {
+    row-gap: 21px;
+}
+
+.membership-section {
+    padding-top: 26px;
+}
+
+@media (max-width: 600px) {
+    .form-section-heading {
+        align-items: flex-start;
+    }
+
+    .member-form-section .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .member-form-section .form-group-full {
+        grid-column: auto;
+    }
+}
