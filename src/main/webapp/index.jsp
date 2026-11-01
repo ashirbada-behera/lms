@@ -9,6 +9,10 @@
     }
 
     boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
+    if (request.getAttribute("dashboardStats") == null) {
+        response.sendRedirect(request.getContextPath() + "/dashboard");
+        return;
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -155,22 +159,22 @@
 
             <article class="stat-card">
                 <p>Total Books</p>
-                <h2>—</h2>
+                <h2>${dashboardStats.totalBooks}</h2>
             </article>
 
             <article class="stat-card">
                 <p>Total Members</p>
-                <h2>—</h2>
+                <h2>${dashboardStats.totalMembers}</h2>
             </article>
 
             <article class="stat-card">
                 <p>Books Issued</p>
-                <h2>—</h2>
+                <h2>${dashboardStats.booksIssued}</h2>
             </article>
 
             <article class="stat-card stat-card-accent">
                 <p>Overdue Books</p>
-                <h2>—</h2>
+                <h2>${dashboardStats.overdueBooks}</h2>
             </article>
 
         </section>
@@ -207,10 +211,18 @@
                     <span>View and manage members</span>
                 </a>
 
-                <a class="quick-access-card" href="#issue-return">
-                    <span class="quick-access-icon">⇄</span>
-                    <strong>Issue &amp; Return</strong>
-                    <span>Manage book transactions</span>
+                <a class="quick-access-card"
+                    href="${pageContext.request.contextPath}/issue">
+                    <span class="quick-access-icon">📖</span>
+                    <strong>Issue Book</strong>
+                    <span>Issue books to members</span>
+                </a>
+
+                <a class="quick-access-card"
+                   href="${pageContext.request.contextPath}/return">
+                    <span class="quick-access-icon">↩</span>
+                    <strong>Return Book</strong>
+                    <span>Manage book returns</span>
                 </a>
 
                 <% } else { %>
