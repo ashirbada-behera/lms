@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -10,38 +9,36 @@
 </head>
 <body>
 
-<aside class="sidebar">
-    <div class="brand">
-        <h2>Library</h2>
-        <p>Management System</p>
-    </div>
-
-    <nav class="sidebar-nav">
-        <p class="nav-heading">MAIN MENU</p>
-        <a href="dashboard.jsp">Dashboard</a>
-        <a href="members">Members</a>
-        <a href="books">Books</a>
-        <a href="issue.jsp" class="active">Issue Book</a>
-        <a href="return.jsp">Return Book</a>
-    </nav>
-</aside>
-
 <main class="main-content">
 
     <header class="page-header">
-        <p class="eyebrow">WORKSPACE / CIRCULATION</p>
-        <h1>Issue a Book</h1>
-        <p class="page-subtitle">
-            Record a book issue and set its due date.
-        </p>
+        <div class="header-top">
+
+            <div class="heading-content">
+                <p class="project-title">Library Management System</p>
+                <p class="eyebrow">WORKSPACE / CIRCULATION</p>
+                <h1>Issue a Book</h1>
+                <p class="page-subtitle">
+                    Record a book issue and set its due date.
+                </p>
+            </div>
+
+            <nav class="page-navigation">
+                <a href="<%= request.getContextPath() %>/index.jsp"
+                   class="nav-button">Return to Dashboard</a>
+
+                <a href="<%= request.getContextPath() %>/return"
+                   class="nav-button">Go to Return Book</a>
+            </nav>
+
+        </div>
     </header>
 
     <section class="issue-panel">
 
-        <h2>Issue a book</h2>
+        <h2>Issue a Book</h2>
         <p>Enter the member registration number, book ID, and due date.</p>
 
-        <!-- Success or error message -->
         <% if (request.getAttribute("message") != null) { %>
 
         <div class="issue-message <%= request.getAttribute("messageType") %>">
@@ -51,7 +48,6 @@
             <% if ("success".equals(request.getAttribute("messageType"))) { %>
 
             <div class="issue-details">
-
                 <h4>Issue Details</h4>
 
                 <p>
@@ -80,9 +76,9 @@
                 </p>
 
                 <p class="issue-note">
-                    Keep the Issue ID. You will need it when returning this book.
+                    Keep the Issue ID. You may need it for reference
+                    when returning this book.
                 </p>
-
             </div>
 
             <% } %>
@@ -99,30 +95,33 @@
                     Registration Number:
                 </label>
 
-                <input type="text"
-                       id="registrationNumber"
-                       name="registrationNumber"
-                       required>
+                <input
+                        type="text"
+                        id="registrationNumber"
+                        name="registrationNumber"
+                        required>
 
                 <label class="form-label" for="bookId">
                     Book ID:
                 </label>
 
-                <input type="number"
-                       id="bookId"
-                       name="bookId"
-                       min="1"
-                       required>
+                <input
+                        type="number"
+                        id="bookId"
+                        name="bookId"
+                        min="1"
+                        required>
 
                 <label class="form-label" for="dueDate">
                     Due Date:
                 </label>
 
-                <input type="date"
-                       id="dueDate"
-                       name="dueDate"
-                       min="<%= java.time.LocalDate.now() %>"
-                       required>
+                <input
+                        type="date"
+                        id="dueDate"
+                        name="dueDate"
+                        min="<%= java.time.LocalDate.now() %>"
+                        required>
 
                 <button class="issue-button" type="submit">
                     Issue Book

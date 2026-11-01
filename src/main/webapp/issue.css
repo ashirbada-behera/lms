@@ -1,82 +1,46 @@
+/* Basic page layout */
+* {
+    box-sizing: border-box;
+}
 
-/* Basic page colors and layout */
 body {
     margin: 0;
-    padding: 30px;
-    display: flex;
+    padding: 35px;
     min-height: 100vh;
-    box-sizing: border-box;
     background-color: #F5F1E9;
     color: #292821;
     font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* Left sidebar */
-.sidebar {
-    width: 240px;
-    min-width: 240px;
-    min-height: 100vh;
-    box-sizing: border-box;
-    padding: 30px 20px;
-    margin: -30px 0 -30px -30px;
-    background-color: #243D30;
-    color: #FFFDF9;
-    flex-shrink: 0;
-}
-
-/* Library brand */
-.brand h2 {
-    margin: 0;
-    color: #FFFDF9;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 25px;
-}
-
-.brand p {
-    margin-top: 6px;
-    color: #D8D0C3;
-    font-size: 13px;
-}
-
-/* Sidebar navigation */
-.sidebar-nav {
-    margin-top: 45px;
-}
-
-.nav-heading {
-    margin-bottom: 15px;
-    color: #C5BBAA;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-}
-
-.sidebar-nav a {
-    display: block;
-    margin-bottom: 8px;
-    padding: 12px;
-    border-radius: 7px;
-    color: #F5F1E9;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-    background-color: #4F6548;
-    color: white;
-}
-
 /* Main content */
 .main-content {
-    flex: 1;
-    min-width: 0;
-    max-width: 900px;
+    width: 100%;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 0 30px;
 }
 
+/* Page heading */
 .page-header {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+}
+
+.heading-content {
+    min-width: 0;
+}
+
+.project-title {
+    margin: 0 0 22px;
+    color: #514638;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    font-weight: bold;
 }
 
 .eyebrow {
@@ -98,22 +62,71 @@ h1 {
 
 .page-subtitle {
     color: #79776E;
+    line-height: 1.6;
 }
 
-/* Issue book panel */
+/* Fixed navigation at the top-right corner */
+.page-navigation {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 11px 17px;
+    border: 1px solid #98b899;
+    border-radius: 8px;
+    background-color: #618361;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.nav-button:hover {
+    background-color: #E9E1D5;
+    border-color: #81725E;
+}
+
+/* Keep navigation usable on smaller screens */
+@media (max-width: 750px) {
+    .page-navigation {
+        position: static;
+        justify-content: flex-start;
+        margin-bottom: 25px;
+    }
+}
+
+/* Issue panel */
 .issue-panel {
     padding: 25px;
     border: 1px solid #E5DED2;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: #F5F1E9;
 }
 
-/* Form container */
+.issue-panel > h2 {
+    margin-top: 5px;
+    margin-bottom: 12px;
+}
+
+.issue-panel > p {
+    line-height: 1.6;
+}
+
+/* Form panel */
 .form-panel {
+    width: 100%;
     max-width: 600px;
     margin: 25px auto 0;
     padding: 28px;
-    box-sizing: border-box;
     border: 1px solid #E5DED2;
     border-radius: 14px;
     background-color: #FFFDF9;
@@ -127,153 +140,49 @@ h1 {
 }
 
 /* Form inputs */
-input[type="number"],
-input[type="date"] {
+.form-panel input {
     display: block;
     width: 100%;
-    box-sizing: border-box;
+    min-height: 46px;
     margin-bottom: 20px;
     padding: 12px;
     border: 1px solid #D8D0C3;
-    border-radius: 8px;
+    border-radius: 9px;
     background-color: white;
     color: #292821;
     font-family: inherit;
     font-size: 15px;
 }
 
-input[type="number"]:focus,
-input[type="date"]:focus {
-    border-color: #64876A;
+.form-panel input:focus {
+    border-color: #81725E;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(129, 114, 94, 0.13);
 }
 
 /* Issue button */
 .issue-button {
-    padding: 12px 20px;
-    border: none;
+    padding: 12px 22px;
+    border: 1px solid #514638;
     border-radius: 8px;
-    background-color: #4F6548;
-    color: white;
+    background-color: #514638;
+    color: #FFFDF9;
     font-family: inherit;
     font-size: 15px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .issue-button:hover {
-    background-color: #1C422F;
+    background-color: #342D25;
 }
 
-/* Small screens */
-@media (max-width: 700px) {
-    body {
-        display: block;
-        padding: 15px;
-    }
-
-    .sidebar {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-        margin: -15px -15px 25px;
-        padding: 20px;
-    }
-
-    .sidebar-nav {
-        margin-top: 25px;
-    }
-
-    .main-content {
-        padding: 0;
-    }
-
-    .form-panel {
-        padding: 20px;
-    }
-}
-
-/* Issue success and error messages */
-.issue-message {
-    margin: 24px 0;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid;
-}
-
-.issue-message h3 {
-    margin: 0 0 14px;
-    font-size: 18px;
-}
-
-.issue-message.success {
-    background-color: #eaf8ef;
-    border-color: #8bd4a3;
-    color: #176b35;
-}
-
-.issue-message.error {
-    background-color: #fff0f0;
-    border-color: #e8a0a0;
-    color: #a32626;
-}
-
-.issue-details {
-    margin-top: 15px;
-    padding: 16px;
-    background-color: rgba(255, 255, 255, 0.75);
-    border-radius: 8px;
-}
-
-.issue-details h4 {
-    margin: 0 0 12px;
-    font-size: 16px;
-}
-
-.issue-details p {
-    margin: 9px 0;
-    font-size: 14px;
-}
-
-.issue-note {
-    margin-top: 15px !important;
-    padding-top: 12px;
-    border-top: 1px solid #c8dfce;
-    font-weight: 600;
-}
-
-/* Keep all issue form input boxes consistent */
-.form-panel input {
-    display: block;
-    width: 100%;
-    min-height: 46px;
-    box-sizing: border-box;
-    padding: 12px;
-    border: 1px solid #d9cdbd;
-    border-radius: 9px;
-    background-color: #fff;
-    font-size: 15px;
-}
-
-/* Success and error message panel */
+/* Success and error messages */
 .issue-message {
     margin: 22px 0;
     padding: 18px 20px;
-    border-radius: 10px;
     border: 1px solid;
-}
-
-/* Successful issue - green */
-.issue-message.success {
-    background-color: #edf7ed;
-    border-color: #a5cba5;
-    color: #285b32;
-}
-
-/* Already issued / validation error - red */
-.issue-message.error {
-    background-color: #fff0ef;
-    border-color: #e5aaa5;
-    color: #a52e27;
+    border-radius: 10px;
 }
 
 .issue-message h3 {
@@ -282,11 +191,27 @@ input[type="date"]:focus {
     font-weight: 600;
 }
 
+.issue-message.success {
+    background-color: #edf7ed;
+    border-color: #a5cba5;
+    color: #285b32;
+}
+
+.issue-message.error {
+    background-color: #fff0ef;
+    border-color: #e5aaa5;
+    color: #a52e27;
+}
+
 .issue-details {
     margin-top: 12px;
     padding: 15px;
     border-radius: 8px;
     background-color: rgba(255, 255, 255, 0.75);
+}
+
+.issue-details h4 {
+    margin: 0 0 12px;
 }
 
 .issue-details p {
@@ -298,4 +223,35 @@ input[type="date"]:focus {
     padding-top: 12px;
     border-top: 1px solid #d8e4d8;
     font-weight: 600;
+}
+
+/* Responsive layout */
+@media (max-width: 750px) {
+    body {
+        padding: 20px;
+    }
+
+    .header-top {
+        flex-direction: column;
+    }
+
+    .page-navigation {
+        justify-content: flex-start;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .project-title {
+        font-size: 23px;
+    }
+
+    .issue-panel {
+        padding: 20px;
+    }
+
+    .form-panel {
+        padding: 20px;
+    }
 }

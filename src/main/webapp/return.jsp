@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.example.lms.model.IssueRecord" %>
@@ -14,30 +13,29 @@
 
 <body>
 
-<aside class="sidebar">
-    <div class="brand">
-        <h2>Library</h2>
-        <p>Management System</p>
-    </div>
-
-    <nav class="sidebar-nav">
-        <p class="nav-heading">MAIN MENU</p>
-        <a href="index.jsp">Dashboard</a>
-        <a href="members.jsp">Members</a>
-        <a href="books.jsp">Books</a>
-        <a href="issue.jsp">Issue Book</a>
-        <a href="return" class="active">Return Book</a>
-    </nav>
-</aside>
-
 <main class="main-content">
 
     <header class="page-header">
-        <p class="eyebrow">WORKSPACE / CIRCULATION</p>
-        <h1>Return Book</h1>
-        <p class="page-subtitle">
-            Find a member's issued books and process a return.
-        </p>
+        <div class="header-top">
+
+            <div class="heading-content">
+                <p class="project-title">Library Management System</p>
+                <p class="eyebrow">WORKSPACE / CIRCULATION</p>
+                <h1>Return Book</h1>
+                <p class="page-subtitle">
+                    Find a member's issued books and process a return.
+                </p>
+            </div>
+
+            <nav class="page-navigation">
+                <a href="<%= request.getContextPath() %>/index.jsp"
+                   class="nav-button">Return to Dashboard</a>
+
+                <a href="<%= request.getContextPath() %>/issue.jsp"
+                   class="nav-button">Go to Issue Book</a>
+            </nav>
+
+        </div>
     </header>
 
     <section class="return-panel">
@@ -62,6 +60,7 @@
             </h3>
 
             <% } %>
+
         </div>
 
         <% } %>
@@ -136,20 +135,22 @@
                         <td>
                             <form action="return" method="POST">
 
-                                <input type="hidden"
-                                       name="action"
-                                       value="return">
+                                <input
+                                        type="hidden"
+                                        name="action"
+                                        value="return">
 
-                                <input type="hidden"
-                                       name="registrationNumber"
-                                       value="<%= request.getAttribute("registrationNumber") %>">
+                                <input
+                                        type="hidden"
+                                        name="registrationNumber"
+                                        value="<%= request.getAttribute("registrationNumber") %>">
 
-                                <input type="hidden"
-                                       name="issueId"
-                                       value="<%= issue.getIssueId() %>">
+                                <input
+                                        type="hidden"
+                                        name="issueId"
+                                        value="<%= issue.getIssueId() %>">
 
-                                <button class="return-button"
-                                        type="submit">
+                                <button class="return-button" type="submit">
                                     Return Book
                                 </button>
 
