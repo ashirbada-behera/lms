@@ -45,7 +45,8 @@
 
             <% if (isAdmin) { %>
 
-            <a class="nav-link" href="#books">
+            <a class="nav-link"
+               href="${pageContext.request.contextPath}/books">
                 ▤ &nbsp; Book Management
             </a>
 
@@ -66,8 +67,9 @@
 
             <% } else { %>
 
-            <a class="nav-link" href="#books">
-                ▤ &nbsp; View Books
+            <a class="nav-link"
+               href="${pageContext.request.contextPath}/books">
+                ▤ &nbsp; Book Management
             </a>
 
             <a class="nav-link" href="#my-borrowing">
@@ -186,7 +188,8 @@
 
                 <% if (isAdmin) { %>
 
-                <a class="quick-access-card" href="#books">
+                <a class="quick-access-card"
+                   href="${pageContext.request.contextPath}/books">
                     <span class="quick-access-icon">▤</span>
                     <strong>Book Management</strong>
                     <span>Manage library books</span>
