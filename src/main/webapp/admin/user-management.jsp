@@ -476,35 +476,6 @@
 
 <div class="app-shell">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-
-        <div class="brand">
-            <div class="brand-mark">L</div>
-            <div class="brand-name">Library LMS</div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="<%= request.getContextPath() %>/index.jsp"
-               class="nav-link">
-                Dashboard
-            </a>
-
-            <a href="<%= request.getContextPath() %>/admin/users"
-               class="nav-link active">
-                User Management
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <a href="<%= request.getContextPath() %>/logout"
-               class="logout-link">
-                Logout
-            </a>
-        </div>
-
-    </aside>
-
     <!-- Main content -->
     <main class="main-content">
 

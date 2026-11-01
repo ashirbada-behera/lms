@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter({"/index.jsp", "/protected/*", "/admin/*"})
+@WebFilter({"/index.jsp", "/protected/*", "/admin/*", "/issue", "/return"})
 public class LoginCheckFilter implements Filter {
 
     @Override
@@ -37,7 +37,10 @@ public class LoginCheckFilter implements Filter {
         String requestPath = httpRequest.getRequestURI()
                 .substring(httpRequest.getContextPath().length());
 
-        if (requestPath.startsWith("/admin/")) {
+        if (requestPath.startsWith("/admin/")
+
+        ||"issue".equals(requestPath)
+        ||"return".equals(requestPath)){
 
             String role = (String) session.getAttribute("role");
 

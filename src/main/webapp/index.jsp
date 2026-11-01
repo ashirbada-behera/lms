@@ -55,9 +55,14 @@
                 ♙ &nbsp; Member Management
             </a>
 
-            <a class="nav-link" href="#issue-return">
-                ⇄ &nbsp; Issue &amp; Return
+            <a class="nav-link"
+               href="${pageContext.request.contextPath}/issue">
+                📖 &nbsp; Issue Book
             </a>
+
+            <a class="nav-link"
+               href= "${pageContext.request.contextPath}/return">
+                ↩️ &nbsp; Return Book
 
             <!-- User Management -->
             <a class="nav-link"
