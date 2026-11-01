@@ -1,3 +1,4 @@
+
 package org.example.lms.member.web;
 
 import jakarta.servlet.ServletException;
@@ -20,10 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-@WebServlet(
-        name = "MemberEditServlet",
-        urlPatterns = "/members/edit"
-)
+@WebServlet(name = "MemberEditServlet", urlPatterns = "/members/edit")
 public class MemberEditServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +40,9 @@ public class MemberEditServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        // Make the session CSRF token available to the edit form.
+        setNoCacheHeaders(response);
+        response.setContentType("text/html;charset=UTF-8");
+
         request.setAttribute(
                 "csrfToken",
                 CsrfTokenUtil.getOrCreateToken(request)
@@ -58,7 +58,6 @@ public class MemberEditServlet extends HttpServlet {
             MemberResponse member = memberService.getMemberById(id);
 
             request.setAttribute("member", member);
-
             request.getRequestDispatcher(EDIT_PAGE)
                     .forward(request, response);
 
@@ -67,6 +66,19 @@ public class MemberEditServlet extends HttpServlet {
                     HttpServletResponse.SC_NOT_FOUND,
                     "The requested member was not found."
             );
+
+        } catch (RuntimeException exception) {
+            getServletContext().log(
+                    "Unexpected error while loading a member for editing.",
+                    exception
+            );
+
+            if (!response.isCommitted()) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Unable to load the member. Please try again."
+                );
+            }
         }
     }
 
@@ -76,17 +88,16 @@ public class MemberEditServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
+        setNoCacheHeaders(response);
         request.setCharacterEncoding("UTF-8");
 
-        // Reject invalid or missing tokens before processing the update.
         if (!CsrfTokenUtil.isValid(
                 request,
                 request.getParameter("csrfToken"))) {
 
             response.sendError(
                     HttpServletResponse.SC_FORBIDDEN,
-                    "Invalid or expired security token. "
-                            + "Reload the edit form and try again."
+                    "Invalid or expired security token. Reload the edit form and try again."
             );
             return;
         }
@@ -120,7 +131,6 @@ public class MemberEditServlet extends HttpServlet {
             request.setAttribute("errorMessage", exception.getMessage());
             request.setAttribute("memberId", id);
 
-            // Preserve the token when redisplaying a validation error.
             request.setAttribute(
                     "csrfToken",
                     CsrfTokenUtil.getOrCreateToken(request)
@@ -130,6 +140,19 @@ public class MemberEditServlet extends HttpServlet {
 
             request.getRequestDispatcher(EDIT_PAGE)
                     .forward(request, response);
+
+        } catch (RuntimeException exception) {
+            getServletContext().log(
+                    "Unexpected error while updating a member.",
+                    exception
+            );
+
+            if (!response.isCommitted()) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Unable to update the member. Please try again."
+                );
+            }
         }
     }
 
@@ -138,17 +161,9 @@ public class MemberEditServlet extends HttpServlet {
     ) {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest();
 
-        updateRequest.setFullName(
-                requiredParameter(request, "fullName")
-        );
-
-        updateRequest.setEmail(
-                requiredParameter(request, "email")
-        );
-
-        updateRequest.setPhone(
-                requiredParameter(request, "phone")
-        );
+        updateRequest.setFullName(requiredParameter(request, "fullName"));
+        updateRequest.setEmail(requiredParameter(request, "email"));
+        updateRequest.setPhone(requiredParameter(request, "phone"));
 
         updateRequest.setDateOfBirth(
                 parseOptionalDate(request.getParameter("dateOfBirth"))
@@ -222,9 +237,7 @@ public class MemberEditServlet extends HttpServlet {
         String value = request.getParameter(name);
 
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
-                    fieldLabel(name) + " is required."
-            );
+            throw new IllegalArgumentException(fieldLabel(name) + " is required.");
         }
 
         return value.trim();
@@ -238,9 +251,7 @@ public class MemberEditServlet extends HttpServlet {
         try {
             return LocalDate.parse(value.trim());
         } catch (DateTimeParseException exception) {
-            throw new IllegalArgumentException(
-                    "Enter a valid date of birth."
-            );
+            throw new IllegalArgumentException("Enter a valid date of birth.");
         }
     }
 
@@ -249,18 +260,14 @@ public class MemberEditServlet extends HttpServlet {
             String fieldName
     ) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
-                    fieldName + " is required."
-            );
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
 
         try {
             return LocalDate.parse(value.trim());
         } catch (DateTimeParseException exception) {
             throw new IllegalArgumentException(
-                    "Enter a valid "
-                            + fieldName.toLowerCase(Locale.ROOT)
-                            + "."
+                    "Enter a valid " + fieldName.toLowerCase(Locale.ROOT) + "."
             );
         }
     }
@@ -273,11 +280,7 @@ public class MemberEditServlet extends HttpServlet {
             return null;
         }
 
-        return parseRequiredEnum(
-                value,
-                enumType,
-                enumType.getSimpleName()
-        );
+        return parseRequiredEnum(value, enumType, enumType.getSimpleName());
     }
 
     private static <E extends Enum<E>> E parseRequiredEnum(
@@ -286,9 +289,7 @@ public class MemberEditServlet extends HttpServlet {
             String fieldName
     ) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
-                    fieldName + " is required."
-            );
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
 
         try {
@@ -298,9 +299,7 @@ public class MemberEditServlet extends HttpServlet {
             );
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException(
-                    "Select a valid "
-                            + fieldName.toLowerCase(Locale.ROOT)
-                            + "."
+                    "Select a valid " + fieldName.toLowerCase(Locale.ROOT) + "."
             );
         }
     }
@@ -314,29 +313,33 @@ public class MemberEditServlet extends HttpServlet {
         };
     }
 
-    private static void preserveFormValues(
-            HttpServletRequest request
-    ) {
+    private static void preserveFormValues(HttpServletRequest request) {
         request.setAttribute("fullName", request.getParameter("fullName"));
         request.setAttribute("email", request.getParameter("email"));
         request.setAttribute("phone", request.getParameter("phone"));
         request.setAttribute("dateOfBirth", request.getParameter("dateOfBirth"));
         request.setAttribute("gender", request.getParameter("gender"));
         request.setAttribute("address", request.getParameter("address"));
-
         request.setAttribute(
                 "membershipType",
                 request.getParameter("membershipType")
         );
-
         request.setAttribute(
                 "registrationDate",
                 request.getParameter("registrationDate")
         );
-
         request.setAttribute(
                 "validUntil",
                 request.getParameter("validUntil")
         );
+    }
+
+    private static void setNoCacheHeaders(HttpServletResponse response) {
+        response.setHeader(
+                "Cache-Control",
+                "no-store, no-cache, must-revalidate, max-age=0"
+        );
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
     }
 }

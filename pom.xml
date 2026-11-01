@@ -1,176 +1,160 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
-  <artifactId>lms</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+    <groupId>org.example</groupId>
+    <artifactId>lms</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-  <name>Library Management System</name>
-  <url>http://www.example.com</url>
+    <name>Library Management System</name>
+    <description>Library Management System Web Application</description>
 
-  <!-- =========================================================
-       Project Properties
-       ========================================================= -->
-  <properties>
-    <!-- Java -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>21</java.version>
-    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
 
-    <!-- Jakarta Web -->
-    <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-    <jakarta.jsp.version>3.1.0</jakarta.jsp.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jakarta.jsp.version>3.1.0</jakarta.jsp.version>
 
-    <!-- JSTL -->
-    <jakarta.jstl.api.version>3.0.2</jakarta.jstl.api.version>
-    <jakarta.jstl.impl.version>3.0.1</jakarta.jstl.impl.version>
+        <jakarta.jstl.api.version>3.0.2</jakarta.jstl.api.version>
+        <jakarta.jstl.impl.version>3.0.1</jakarta.jstl.impl.version>
 
-    <!-- Persistence -->
-    <hibernate.version>7.4.7.Final</hibernate.version>
-    <mysql.version>26.7.0</mysql.version>
+        <mysql.version>9.5.0</mysql.version>
 
-    <!-- Validation -->
-    <hibernate.validator.version>9.1.4.Final</hibernate.validator.version>
+        <hibernate.version>7.4.7.Final</hibernate.version>
+        <hibernate.validator.version>9.1.4.Final</hibernate.validator.version>
 
-    <!-- Testing -->
-    <junit.version>6.1.2</junit.version>
-    <mockito.version>5.20.0</mockito.version>
-  </properties>
+        <junit.version>6.1.2</junit.version>
+        <mockito.version>5.20.0</mockito.version>
+    </properties>
 
-  <!-- =========================================================
-       Dependencies
-       ========================================================= -->
-  <dependencies>
+    <dependencies>
 
-    <!-- Jakarta Servlet API -->
-    <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>${jakarta.servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <!-- Jakarta JSP API -->
-    <dependency>
-      <groupId>jakarta.servlet.jsp</groupId>
-      <artifactId>jakarta.servlet.jsp-api</artifactId>
-      <version>${jakarta.jsp.version}</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>${jakarta.jsp.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <!-- JSTL API -->
-    <dependency>
-      <groupId>jakarta.servlet.jsp.jstl</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-      <version>${jakarta.jstl.api.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>${jakarta.jstl.api.version}</version>
+        </dependency>
 
-    <!-- JSTL Implementation -->
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>${jakarta.jstl.impl.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>${jakarta.jstl.impl.version}</version>
+        </dependency>
 
-    <!-- Hibernate ORM -->
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>${hibernate.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
-    <!-- MySQL JDBC Driver -->
-    <dependency>
-      <groupId>com.mysql</groupId>
-      <artifactId>mysql-connector-j</artifactId>
-      <version>${mysql.version}</version>
-      <scope>runtime</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
 
-    <!-- Hibernate Validator -->
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate.validator.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
+        </dependency>
 
-    <!-- JUnit Jupiter -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.1.1</version>
+        </dependency>
 
-    <!-- Mockito for Unit Testing -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-  </dependencies>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-  <!-- =========================================================
-       Build Configuration
-       ========================================================= -->
-  <build>
-    <finalName>lms</finalName>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-    <pluginManagement>
-      <plugins>
+    </dependencies>
 
-        <!-- Maven Clean Plugin -->
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.5.0</version>
-        </plugin>
+    <build>
+        <finalName>lms</finalName>
 
-        <!-- Maven Resources Plugin -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.1</version>
-        </plugin>
+        <plugins>
 
-        <!-- Maven Compiler Plugin -->
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.16.0</version>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.5.0</version>
+            </plugin>
 
-        <!-- Maven Surefire Plugin -->
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.6</version>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
 
-        <!-- Maven WAR Plugin -->
-        <plugin>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.5.1</version>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.16.0</version>
+                <configuration>
+                    <release>21</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
 
-        <!-- Maven Install Plugin -->
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.4</version>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.6</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
 
-        <!-- Maven Deploy Plugin -->
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.4</version>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
 
-      </plugins>
-    </pluginManagement>
-  </build>
+        </plugins>
+    </build>
 
 </project>

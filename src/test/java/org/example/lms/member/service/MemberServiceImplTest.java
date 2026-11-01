@@ -1,3 +1,4 @@
+
 package org.example.lms.member.service;
 
 import org.example.lms.member.domain.Gender;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -53,27 +53,20 @@ class MemberServiceImplTest {
         LocalDate today = LocalDate.now();
 
         Member member = new Member(
-                "MEM-TEST" + String.format("%06d", id),
+                "MEM-TEST-" + String.format("%06d", id),
                 "Existing Member",
                 "existing" + id + "@example.com",
                 "9876543210",
+                LocalDate.of(2000, 1, 1),
+                Gender.OTHER,
+                "Test Address",
                 MembershipType.STUDENT,
                 today,
-                today.plusYears(1)
+                today.plusYears(1),
+                MemberStatus.ACTIVE
         );
 
-        try {
-            Field idField = Member.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(member, id);
-        } catch (ReflectiveOperationException exception) {
-            throw new AssertionError(
-                    "Unable to assign the generated ID in the test fixture.",
-                    exception
-            );
-        }
-
-        member.setStatus(MemberStatus.ACTIVE);
+        member.setId(id);
         return member;
     }
 
@@ -212,6 +205,20 @@ class MemberServiceImplTest {
     }
 
     @Test
+    @DisplayName("Rejects a full name longer than 120 characters")
+    void createMemberRejectsLongFullName() {
+        MemberCreateRequest request = validCreateRequest();
+        request.setFullName("A".repeat(121));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> memberService.createMember(request)
+        );
+
+        verify(memberRepository, never()).save(any(Member.class));
+    }
+
+    @Test
     @DisplayName("Rejects a null creation request")
     void createMemberRejectsNullRequest() {
         assertThrows(
@@ -226,6 +233,7 @@ class MemberServiceImplTest {
     @DisplayName("Returns a member when the ID exists")
     void getMemberByIdSuccessfully() {
         Member member = existingMember(1L);
+
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
 
@@ -266,6 +274,7 @@ class MemberServiceImplTest {
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
+
         when(memberRepository.existsByEmailAndIdNot(
                 "updated@example.com", 1L
         )).thenReturn(false);
@@ -288,15 +297,14 @@ class MemberServiceImplTest {
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
+
         when(memberRepository.existsByEmailAndIdNot(
                 "updated@example.com", 1L
         )).thenReturn(true);
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> memberService.updateMember(
-                        1L, validUpdateRequest()
-                )
+                () -> memberService.updateMember(1L, validUpdateRequest())
         );
 
         verify(memberRepository, never()).save(any(Member.class));
@@ -307,14 +315,33 @@ class MemberServiceImplTest {
     void updateMemberRejectsInvalidMembershipPeriod() {
         Member member = existingMember(1L);
         MemberUpdateRequest request = validUpdateRequest();
+
         request.setRegistrationDate(LocalDate.of(2026, 1, 2));
         request.setValidUntil(LocalDate.of(2026, 1, 1));
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
+
         when(memberRepository.existsByEmailAndIdNot(
                 "updated@example.com", 1L
         )).thenReturn(false);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> memberService.updateMember(1L, request)
+        );
+
+        verify(memberRepository, never()).save(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("Rejects an overlong full name during update")
+    void updateMemberRejectsLongFullName() {
+        MemberUpdateRequest request = validUpdateRequest();
+        request.setFullName("A".repeat(121));
+
+        when(memberRepository.findById(1L))
+                .thenReturn(Optional.of(existingMember(1L)));
 
         assertThrows(
                 IllegalArgumentException.class,
@@ -370,7 +397,8 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("Returns all members for a blank search")
     void blankSearchReturnsAllMembers() {
-        when(memberRepository.findAll()).thenReturn(List.of());
+        when(memberRepository.findAll())
+                .thenReturn(List.of());
 
         List<MemberResponse> responses = memberService.searchMembers(" ");
 

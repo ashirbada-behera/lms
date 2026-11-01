@@ -1,3 +1,4 @@
+
 package org.example.lms.member.web;
 
 import jakarta.servlet.ServletException;
@@ -13,10 +14,7 @@ import org.example.lms.security.CsrfTokenUtil;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "MemberDeactivateServlet",
-        urlPatterns = "/members/deactivate"
-)
+@WebServlet(name = "MemberDeactivateServlet", urlPatterns = "/members/deactivate")
 public class MemberDeactivateServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -34,39 +32,26 @@ public class MemberDeactivateServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
+        setNoCacheHeaders(response);
         request.setCharacterEncoding("UTF-8");
 
-        // Validate CSRF before performing any state-changing operation.
-        String submittedToken = request.getParameter("csrfToken");
+        if (!CsrfTokenUtil.isValid(
+                request,
+                request.getParameter("csrfToken"))) {
 
-        if (!CsrfTokenUtil.isValid(request, submittedToken)) {
             response.sendError(
                     HttpServletResponse.SC_FORBIDDEN,
-                    "Invalid or expired security token. "
-                            + "Reload the member directory and try again."
+                    "Invalid or expired security token. Reload the member directory and try again."
             );
             return;
         }
 
-        String idParameter = request.getParameter("id");
-        Long memberId;
+        Long memberId = parseMemberId(
+                request.getParameter("id"),
+                response
+        );
 
-        try {
-            if (idParameter == null || idParameter.isBlank()) {
-                throw new IllegalArgumentException();
-            }
-
-            memberId = Long.parseLong(idParameter.trim());
-
-            if (memberId <= 0) {
-                throw new IllegalArgumentException();
-            }
-
-        } catch (IllegalArgumentException exception) {
-            response.sendError(
-                    HttpServletResponse.SC_BAD_REQUEST,
-                    "A valid member ID is required."
-            );
+        if (memberId == null) {
             return;
         }
 
@@ -82,6 +67,55 @@ public class MemberDeactivateServlet extends HttpServlet {
                     HttpServletResponse.SC_NOT_FOUND,
                     "The requested member was not found."
             );
+
+        } catch (RuntimeException exception) {
+            getServletContext().log(
+                    "Unexpected error while deactivating a member.",
+                    exception
+            );
+
+            if (!response.isCommitted()) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Unable to deactivate the member. Please try again."
+                );
+            }
         }
+    }
+
+    private static Long parseMemberId(
+            String value,
+            HttpServletResponse response
+    ) throws IOException {
+
+        try {
+            if (value == null || value.isBlank()) {
+                throw new NumberFormatException();
+            }
+
+            long id = Long.parseLong(value.trim());
+
+            if (id <= 0) {
+                throw new NumberFormatException();
+            }
+
+            return id;
+
+        } catch (NumberFormatException exception) {
+            response.sendError(
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    "A valid member ID is required."
+            );
+            return null;
+        }
+    }
+
+    private static void setNoCacheHeaders(HttpServletResponse response) {
+        response.setHeader(
+                "Cache-Control",
+                "no-store, no-cache, must-revalidate, max-age=0"
+        );
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
     }
 }

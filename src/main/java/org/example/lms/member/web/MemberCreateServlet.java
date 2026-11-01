@@ -20,10 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-@WebServlet(
-        name = "MemberCreateServlet",
-        urlPatterns = "/members/create"
-)
+@WebServlet(name = "MemberCreateServlet", urlPatterns = "/members/create")
 public class MemberCreateServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -42,12 +39,13 @@ public class MemberCreateServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
+        setNoCacheHeaders(response);
+        response.setContentType("text/html;charset=UTF-8");
+
         request.setAttribute(
                 "csrfToken",
                 CsrfTokenUtil.getOrCreateToken(request)
         );
-
-        response.setContentType("text/html;charset=UTF-8");
 
         request.getRequestDispatcher(ADD_MEMBER_PAGE)
                 .forward(request, response);
@@ -59,12 +57,13 @@ public class MemberCreateServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
+        setNoCacheHeaders(response);
         request.setCharacterEncoding("UTF-8");
 
         if (!CsrfTokenUtil.isValid(
                 request,
-                request.getParameter("csrfToken")
-        )) {
+                request.getParameter("csrfToken"))) {
+
             response.sendError(
                     HttpServletResponse.SC_FORBIDDEN,
                     "Invalid or expired security token. Reload the form and try again."
@@ -87,7 +86,6 @@ public class MemberCreateServlet extends HttpServlet {
 
         } catch (IllegalArgumentException exception) {
             request.setAttribute("errorMessage", exception.getMessage());
-
             preserveFormValues(request);
 
             request.setAttribute(
@@ -97,6 +95,19 @@ public class MemberCreateServlet extends HttpServlet {
 
             request.getRequestDispatcher(ADD_MEMBER_PAGE)
                     .forward(request, response);
+
+        } catch (RuntimeException exception) {
+            getServletContext().log(
+                    "Unexpected error while creating a member.",
+                    exception
+            );
+
+            if (!response.isCommitted()) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Unable to complete the request. Please try again."
+                );
+            }
         }
     }
 
@@ -105,17 +116,9 @@ public class MemberCreateServlet extends HttpServlet {
     ) {
         MemberCreateRequest createRequest = new MemberCreateRequest();
 
-        createRequest.setFullName(
-                requiredParameter(request, "fullName")
-        );
-
-        createRequest.setEmail(
-                requiredParameter(request, "email")
-        );
-
-        createRequest.setPhone(
-                requiredParameter(request, "phone")
-        );
+        createRequest.setFullName(requiredParameter(request, "fullName"));
+        createRequest.setEmail(requiredParameter(request, "email"));
+        createRequest.setPhone(requiredParameter(request, "phone"));
 
         createRequest.setDateOfBirth(
                 parseOptionalDate(request.getParameter("dateOfBirth"))
@@ -148,9 +151,7 @@ public class MemberCreateServlet extends HttpServlet {
         String value = request.getParameter(name);
 
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
-                    fieldLabel(name) + " is required."
-            );
+            throw new IllegalArgumentException(fieldLabel(name) + " is required.");
         }
 
         return value.trim();
@@ -164,9 +165,7 @@ public class MemberCreateServlet extends HttpServlet {
         try {
             return LocalDate.parse(value.trim());
         } catch (DateTimeParseException exception) {
-            throw new IllegalArgumentException(
-                    "Enter a valid date of birth."
-            );
+            throw new IllegalArgumentException("Enter a valid date of birth.");
         }
     }
 
@@ -178,11 +177,7 @@ public class MemberCreateServlet extends HttpServlet {
             return null;
         }
 
-        return parseRequiredEnum(
-                value,
-                enumType,
-                enumType.getSimpleName()
-        );
+        return parseRequiredEnum(value, enumType, enumType.getSimpleName());
     }
 
     private static <E extends Enum<E>> E parseRequiredEnum(
@@ -191,9 +186,7 @@ public class MemberCreateServlet extends HttpServlet {
             String fieldName
     ) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
-                    fieldName + " is required."
-            );
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
 
         try {
@@ -203,9 +196,7 @@ public class MemberCreateServlet extends HttpServlet {
             );
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException(
-                    "Select a valid "
-                            + fieldName.toLowerCase(Locale.ROOT)
-                            + "."
+                    "Select a valid " + fieldName.toLowerCase(Locale.ROOT) + "."
             );
         }
     }
@@ -230,5 +221,14 @@ public class MemberCreateServlet extends HttpServlet {
                 "membershipType",
                 request.getParameter("membershipType")
         );
+    }
+
+    private static void setNoCacheHeaders(HttpServletResponse response) {
+        response.setHeader(
+                "Cache-Control",
+                "no-store, no-cache, must-revalidate, max-age=0"
+        );
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
     }
 }

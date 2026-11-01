@@ -1,8 +1,12 @@
+
 package org.example.lms.config;
 
 import org.example.lms.member.domain.Member;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Centralized Hibernate SessionFactory management.
@@ -11,6 +15,9 @@ import org.hibernate.cfg.Configuration;
  * Each database operation must manage its own Session and transaction.
  */
 public final class HibernateUtil {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(HibernateUtil.class.getName());
 
     private static final SessionFactory SESSION_FACTORY =
             buildSessionFactory();
@@ -35,12 +42,21 @@ public final class HibernateUtil {
                     .addAnnotatedClass(Member.class)
                     .buildSessionFactory();
 
-        } catch (Exception exception) {
-            // Keep the original exception available for diagnosis.
-            System.err.println(
-                    "ERROR: Failed to initialize the Hibernate SessionFactory."
+        } catch (RuntimeException exception) {
+            LOGGER.log(
+                    Level.SEVERE,
+                    "Failed to initialize the Hibernate SessionFactory.",
+                    exception
             );
-            exception.printStackTrace(System.err);
+
+            throw exception;
+
+        } catch (Exception exception) {
+            LOGGER.log(
+                    Level.SEVERE,
+                    "Failed to initialize the Hibernate SessionFactory.",
+                    exception
+            );
 
             throw new ExceptionInInitializerError(exception);
         }
@@ -67,6 +83,7 @@ public final class HibernateUtil {
     public static void shutdown() {
         if (!SESSION_FACTORY.isClosed()) {
             SESSION_FACTORY.close();
+            LOGGER.info("Hibernate SessionFactory closed.");
         }
     }
 }

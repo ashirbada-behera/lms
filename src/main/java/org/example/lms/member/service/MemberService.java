@@ -16,13 +16,21 @@ public interface MemberService {
 
     MemberResponse getMemberByCode(String memberCode);
 
-    MemberResponse updateMember(Long id, MemberUpdateRequest request);
+    MemberResponse updateMember(
+            Long id,
+            MemberUpdateRequest request
+    );
 
     List<MemberResponse> getAllMembers();
 
     List<MemberResponse> getMembersByStatus(MemberStatus status);
 
     List<MemberResponse> searchMembers(String query);
+
+    List<MemberResponse> searchMembers(
+            String query,
+            MemberStatus status
+    );
 
     void deactivateMember(Long id);
 

@@ -1,3 +1,4 @@
+
 package org.example.lms.member.service;
 
 import org.example.lms.member.domain.Member;
@@ -19,6 +20,10 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
+    // ==========================================
+    // CONSTRUCTORS
+    // ==========================================
+
     public MemberServiceImpl() {
         this(new MemberRepositoryImpl());
     }
@@ -30,16 +35,32 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
+    // ==========================================
+    // CREATE MEMBER
+    // ==========================================
+
     @Override
     public MemberResponse createMember(MemberCreateRequest request) {
+
         Objects.requireNonNull(
                 request,
                 "Member creation request is required."
         );
 
-        String fullName = requireText(request.getFullName(), "Full name");
+        String fullName = requireText(
+                request.getFullName(),
+                "Full name"
+        );
+
+        validateFullName(fullName);
+
         String email = normalizeEmail(request.getEmail());
-        String phone = requireText(request.getPhone(), "Phone");
+
+        String phone = requireText(
+                request.getPhone(),
+                "Phone"
+        );
+
         MembershipType membershipType =
                 requireMembershipType(request.getMembershipType());
 
@@ -49,36 +70,48 @@ public class MemberServiceImpl implements MemberService {
         validatePhone(phone);
         validateDateOfBirth(request.getDateOfBirth());
 
+        String address = normalizeOptionalText(request.getAddress());
+
         if (memberRepository.existsByEmail(email)) {
             throw new IllegalArgumentException(
                     "A member with this email address already exists."
             );
         }
 
+        // Correct 11-argument constructor.
         Member member = new Member(
                 generateMemberCode(),
                 fullName,
                 email,
                 phone,
+                request.getDateOfBirth(),
+                request.getGender(),
+                address,
                 membershipType,
                 today,
-                today.plusYears(1)
+                today.plusYears(1),
+                MemberStatus.ACTIVE
         );
-
-        member.setDateOfBirth(request.getDateOfBirth());
-        member.setGender(request.getGender());
-        member.setAddress(normalizeOptionalText(request.getAddress()));
 
         return toResponse(memberRepository.save(member));
     }
+
+    // ==========================================
+    // GET MEMBER BY ID
+    // ==========================================
 
     @Override
     public MemberResponse getMemberById(Long id) {
         return toResponse(findRequiredMember(id));
     }
 
+    // ==========================================
+    // GET MEMBER BY CODE
+    // ==========================================
+
     @Override
     public MemberResponse getMemberByCode(String memberCode) {
+
         String code = requireText(memberCode, "Member code");
 
         Member member = memberRepository.findByMemberCode(code)
@@ -89,11 +122,16 @@ public class MemberServiceImpl implements MemberService {
         return toResponse(member);
     }
 
+    // ==========================================
+    // UPDATE MEMBER
+    // ==========================================
+
     @Override
     public MemberResponse updateMember(
             Long id,
             MemberUpdateRequest request
     ) {
+
         Objects.requireNonNull(
                 request,
                 "Member update request is required."
@@ -101,15 +139,28 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = findRequiredMember(id);
 
-        String fullName = requireText(request.getFullName(), "Full name");
+        String fullName = requireText(
+                request.getFullName(),
+                "Full name"
+        );
+
+        validateFullName(fullName);
+
         String email = normalizeEmail(request.getEmail());
-        String phone = requireText(request.getPhone(), "Phone");
+
+        String phone = requireText(
+                request.getPhone(),
+                "Phone"
+        );
+
         MembershipType membershipType =
                 requireMembershipType(request.getMembershipType());
 
         validateEmail(email);
         validatePhone(phone);
         validateDateOfBirth(request.getDateOfBirth());
+
+        String address = normalizeOptionalText(request.getAddress());
 
         if (memberRepository.existsByEmailAndIdNot(email, id)) {
             throw new IllegalArgumentException(
@@ -129,12 +180,13 @@ public class MemberServiceImpl implements MemberService {
 
         validateMembershipPeriod(registrationDate, validUntil);
 
+        // Update existing member fields.
         member.setFullName(fullName);
         member.setEmail(email);
         member.setPhone(phone);
         member.setDateOfBirth(request.getDateOfBirth());
         member.setGender(request.getGender());
-        member.setAddress(normalizeOptionalText(request.getAddress()));
+        member.setAddress(address);
         member.setMembershipType(membershipType);
         member.setRegistrationDate(registrationDate);
         member.setValidUntil(validUntil);
@@ -142,17 +194,32 @@ public class MemberServiceImpl implements MemberService {
         return toResponse(memberRepository.save(member));
     }
 
+    // ==========================================
+    // GET ALL MEMBERS
+    // ==========================================
+
     @Override
     public List<MemberResponse> getAllMembers() {
+
         return memberRepository.findAll()
                 .stream()
                 .map(this::toResponse)
                 .toList();
     }
 
+    // ==========================================
+    // GET MEMBERS BY STATUS
+    // ==========================================
+
     @Override
-    public List<MemberResponse> getMembersByStatus(MemberStatus status) {
-        Objects.requireNonNull(status, "Member status is required.");
+    public List<MemberResponse> getMembersByStatus(
+            MemberStatus status
+    ) {
+
+        Objects.requireNonNull(
+                status,
+                "Member status is required."
+        );
 
         return memberRepository.findByStatus(status)
                 .stream()
@@ -160,8 +227,13 @@ public class MemberServiceImpl implements MemberService {
                 .toList();
     }
 
+    // ==========================================
+    // SEARCH MEMBERS
+    // ==========================================
+
     @Override
     public List<MemberResponse> searchMembers(String query) {
+
         if (query == null || query.isBlank()) {
             return getAllMembers();
         }
@@ -172,27 +244,70 @@ public class MemberServiceImpl implements MemberService {
                 .toList();
     }
 
+    // ==========================================
+    // SEARCH MEMBERS WITH STATUS FILTER
+    // ==========================================
+
+    @Override
+    public List<MemberResponse> searchMembers(
+            String query,
+            MemberStatus status
+    ) {
+
+        return memberRepository.searchByQueryAndStatus(
+                        query,
+                        status
+                )
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    // ==========================================
+    // DEACTIVATE MEMBER
+    // ==========================================
+
     @Override
     public void deactivateMember(Long id) {
+
         Member member = findRequiredMember(id);
 
         if (member.getStatus() != MemberStatus.INACTIVE) {
+
             member.setStatus(MemberStatus.INACTIVE);
+
             memberRepository.save(member);
         }
     }
 
+    // ==========================================
+    // CHANGE MEMBER STATUS
+    // ==========================================
+
     @Override
-    public void changeMemberStatus(Long id, MemberStatus status) {
+    public void changeMemberStatus(
+            Long id,
+            MemberStatus status
+    ) {
+
         Member member = findRequiredMember(id);
 
-        Objects.requireNonNull(status, "Member status is required.");
+        Objects.requireNonNull(
+                status,
+                "Member status is required."
+        );
 
         member.setStatus(status);
+
         memberRepository.save(member);
     }
 
+    // ==========================================
+    // FIND REQUIRED MEMBER
+    // ==========================================
+
     private Member findRequiredMember(Long id) {
+
         if (id == null || id <= 0) {
             throw new IllegalArgumentException(
                     "Member ID must be a positive number."
@@ -205,7 +320,12 @@ public class MemberServiceImpl implements MemberService {
                 ));
     }
 
+    // ==========================================
+    // CONVERT MEMBER TO RESPONSE DTO
+    // ==========================================
+
     private MemberResponse toResponse(Member member) {
+
         MemberResponse response = new MemberResponse();
 
         response.setId(member.getId());
@@ -226,7 +346,12 @@ public class MemberServiceImpl implements MemberService {
         return response;
     }
 
+    // ==========================================
+    // GENERATE UNIQUE MEMBER CODE
+    // ==========================================
+
     private String generateMemberCode() {
+
         return "MEM-" + UUID.randomUUID()
                 .toString()
                 .replace("-", "")
@@ -234,51 +359,102 @@ public class MemberServiceImpl implements MemberService {
                 .toUpperCase(Locale.ROOT);
     }
 
-    private static String requireText(String value, String field) {
+    // ==========================================
+    // REQUIRED TEXT VALIDATION
+    // ==========================================
+
+    private static String requireText(
+            String value,
+            String field
+    ) {
+
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(field + " is required.");
+            throw new IllegalArgumentException(
+                    field + " is required."
+            );
         }
 
         return value.trim();
     }
 
+    // ==========================================
+    // FULL NAME VALIDATION
+    // ==========================================
+
+    private static void validateFullName(String fullName) {
+
+        if (fullName.length() > 120) {
+            throw new IllegalArgumentException(
+                    "Full name must not exceed 120 characters."
+            );
+        }
+    }
+
+    // ==========================================
+    // EMAIL VALIDATION
+    // ==========================================
+
     private static String normalizeEmail(String email) {
-        return requireText(email, "Email").toLowerCase(Locale.ROOT);
+
+        return requireText(
+                email,
+                "Email"
+        ).toLowerCase(Locale.ROOT);
     }
 
     private static void validateEmail(String email) {
-        if (email.length() > 150
-                || !email.matches(
-                "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
-        )) {
+
+        String emailPattern =
+                "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+        if (email.length() > 150 || !email.matches(emailPattern)) {
             throw new IllegalArgumentException(
                     "Please provide a valid email address."
             );
         }
     }
 
+    // ==========================================
+    // PHONE VALIDATION
+    // ==========================================
+
     private static void validatePhone(String phone) {
-        if (phone.length() > 20
-                || !phone.matches("^[0-9+()\\-\\s]{7,20}$")) {
+
+        String phonePattern = "^[0-9+()\\-\\s]{7,20}$";
+
+        if (phone.length() > 20 || !phone.matches(phonePattern)) {
             throw new IllegalArgumentException(
                     "Please provide a valid phone number."
             );
         }
     }
 
-    private static void validateDateOfBirth(LocalDate dateOfBirth) {
+    // ==========================================
+    // DATE OF BIRTH VALIDATION
+    // ==========================================
+
+    private static void validateDateOfBirth(
+            LocalDate dateOfBirth
+    ) {
+
         if (dateOfBirth != null
                 && !dateOfBirth.isBefore(LocalDate.now())) {
+
             throw new IllegalArgumentException(
                     "Date of birth must be in the past."
             );
         }
     }
 
+    // ==========================================
+    // MEMBERSHIP PERIOD VALIDATION
+    // ==========================================
+
     private static void validateMembershipPeriod(
             LocalDate registrationDate,
             LocalDate validUntil
     ) {
+
         if (validUntil.isBefore(registrationDate)) {
             throw new IllegalArgumentException(
                     "Membership expiry date cannot precede registration date."
@@ -286,7 +462,12 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    // ==========================================
+    // OPTIONAL ADDRESS NORMALIZATION
+    // ==========================================
+
     private static String normalizeOptionalText(String value) {
+
         if (value == null || value.isBlank()) {
             return null;
         }
@@ -302,9 +483,14 @@ public class MemberServiceImpl implements MemberService {
         return normalized;
     }
 
+    // ==========================================
+    // MEMBERSHIP TYPE VALIDATION
+    // ==========================================
+
     private static MembershipType requireMembershipType(
             MembershipType membershipType
     ) {
+
         if (membershipType == null) {
             throw new IllegalArgumentException(
                     "Membership type is required."
