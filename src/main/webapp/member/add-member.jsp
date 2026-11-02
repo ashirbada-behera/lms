@@ -6,12 +6,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Member | Library Management System</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/book-management.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/member-management.css">
+
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/assets/css/book-management.css">
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/assets/css/member-management.css">
 </head>
 <body>
+
 <div class="app-shell">
-  <main class="main-content">
+  <main class="main-content add-member-page">
 
     <header class="topbar">
       <div>
@@ -19,8 +23,12 @@
         <h1>Add New Member</h1>
         <p>Register a new member in the library.</p>
       </div>
+
       <div class="header-actions">
-        <a class="btn btn-quiet" href="${pageContext.request.contextPath}/members">Back to Members</a>
+        <a class="btn btn-quiet"
+           href="${pageContext.request.contextPath}/members">
+          Back to Members
+        </a>
       </div>
     </header>
 
@@ -30,34 +38,48 @@
       </div>
     </c:if>
 
-    <section class="panel">
+    <section class="panel add-member-panel">
+
       <div class="panel-heading">
         <div>
           <p class="eyebrow">MEMBER INFORMATION</p>
           <h2>Personal and Membership Details</h2>
+          <p class="add-member-description">
+            Enter the details below to register a library member.
+          </p>
         </div>
       </div>
 
-      <form method="post" action="${pageContext.request.contextPath}/members/create">
+      <form class="add-member-form"
+            method="post"
+            action="${pageContext.request.contextPath}/members/create">
 
-        <input type="hidden" name="csrfToken" value="<c:out value='${csrfToken}'/>">
+        <input type="hidden" name="csrfToken"
+               value="<c:out value='${csrfToken}'/>">
 
         <div class="form-grid">
+
           <div class="form-group">
-            <label for="fullName">Full Name *</label>
-            <input type="text" id="fullName" name="fullName" maxlength="120"
+            <label for="fullName">Full Name <span>*</span></label>
+            <input type="text" id="fullName" name="fullName"
+                   maxlength="120"
+                   placeholder="Enter full name"
                    value="<c:out value='${fullName}'/>" required>
           </div>
 
           <div class="form-group">
-            <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" maxlength="150"
+            <label for="email">Email Address <span>*</span></label>
+            <input type="email" id="email" name="email"
+                   maxlength="150"
+                   placeholder="example@email.com"
                    value="<c:out value='${email}'/>" required>
           </div>
 
           <div class="form-group">
-            <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" maxlength="20"
+            <label for="phone">Phone Number <span>*</span></label>
+            <input type="tel" id="phone" name="phone"
+                   maxlength="20"
+                   placeholder="Enter phone number"
                    value="<c:out value='${phone}'/>" required>
           </div>
 
@@ -78,7 +100,9 @@
           </div>
 
           <div class="form-group">
-            <label for="membershipType">Membership Type *</label>
+            <label for="membershipType">
+              Membership Type <span>*</span>
+            </label>
             <select id="membershipType" name="membershipType" required>
               <option value="">Select Membership Type</option>
               <option value="STUDENT" ${membershipType eq 'STUDENT' ? 'selected' : ''}>Student</option>
@@ -90,14 +114,24 @@
 
           <div class="form-group form-group-full">
             <label for="address">Address</label>
-            <textarea id="address" name="address" rows="4" maxlength="500"><c:out value="${address}"/></textarea>
+            <textarea id="address" name="address"
+                      rows="4" maxlength="500"
+                      placeholder="Enter complete address"><c:out value="${address}"/></textarea>
           </div>
+
         </div>
 
         <div class="form-actions">
-          <a class="btn btn-quiet" href="${pageContext.request.contextPath}/members">Cancel</a>
-          <button type="submit" class="btn btn-primary">Save Member</button>
+          <a class="btn btn-quiet"
+             href="${pageContext.request.contextPath}/members">
+            Cancel
+          </a>
+
+          <button type="submit" class="btn btn-primary">
+            Save Member
+          </button>
         </div>
+
       </form>
     </section>
 
@@ -108,5 +142,6 @@
 
   </main>
 </div>
+
 </body>
 </html>

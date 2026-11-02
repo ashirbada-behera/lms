@@ -107,6 +107,7 @@
     <!-- Main Dashboard -->
     <main class="main-content" id="overview">
 
+
         <header class="topbar">
 
             <div>
@@ -114,14 +115,6 @@
                 <h1>Dashboard</h1>
                 <p>Manage your library from one place.</p>
             </div>
-
-            <!-- Top User Management Button -->
-            <% if (isAdmin) { %>
-            <a class="nav-link"
-               href="${pageContext.request.contextPath}/admin/users">
-                User Management
-            </a>
-            <% } %>
 
             <div class="user-info">
 
@@ -137,6 +130,7 @@
             </div>
 
         </header>
+
 
         <section class="dashboard-welcome">
 
